@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import java.util.Map;
 @Tag(name="账号相关",description = "账号相关的接口")
 @RestController
 @RequestMapping("account")
+@Validated
 public class AccountController {
     @Resource
     UserAccountService userAccountService;
@@ -39,12 +41,12 @@ public class AccountController {
      * @param userEmail
      * @return JsonResult<Boolean>
      */
-    @Operation(summary = "验证邮箱是否被注册", description = "验证该邮箱是否被注册,返回布尔值")
-    @PostMapping(value = "/verifyEmailIsRegistered",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
-    public JsonResult<Boolean> checkUserByEmail (
+    @Operation(summary = "验证邮箱是否被注册", description = "验证该邮箱是否被注册,存在则返回true")
+    @PostMapping(value = "/verifyEmailRegistered",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
+    public JsonResult<Boolean> verifyEmailRegistered (
             @Parameter(description = "用户邮箱", required = true)
             @RequestParam @Email String userEmail) {
-        return JsonResult.ok(Boolean.TRUE);
+        return JsonResult.ok(userAccountService.emailIsExist(userEmail));
     }
 
     /**
@@ -56,16 +58,29 @@ public class AccountController {
      * @return JsonResult<UserLoginVO>
      */
     @Operation(summary = "注册账号", description = "通过邮箱,密码,验证码进行注册,如果成功则返回用户信息")
-    @PostMapping(value = "/createUserByEmail",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
-    public JsonResult<UserLoginVO> userCreateByEmail(
+    @PostMapping(value = "/registerByEmail",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
+    public JsonResult<UserLoginVO> registerByEmail(
             @Parameter(description = "用户昵称:长度需要在2和15之间", required = true)
-            @RequestParam @Length(min=1,max=15) String userName,
+            @RequestParam @Length(min=2,max=20) String userName,
             @Parameter(description = "用户邮箱:长度需要在5和30之间", required = true)
-            @RequestParam @Length(min=5,max=30) @Email String userEmail,
+            @RequestParam @Length(min=5,max=40) String userEmail,
             @Parameter(description = "用户密码:32位加密后的MD5字符串", required = true)
-            @RequestParam @Size String password,
+            @RequestParam @Length(min=32,max=32) String password,
             @Parameter(description = "邮箱验证码", required = true)
             @RequestParam String verCode){
+        /*
+        1.验证
+        验证字段合法性，验证邮箱验证码
+        检测对应邮箱账户是否已存在
+        2.处理
+        作废验证码
+        二次加密密码
+        执行插入sql
+        3.返回
+        获取用户登录信息
+        生成token
+
+         */
         return JsonResult.ok(new UserLoginVO());
     }
 
@@ -79,9 +94,9 @@ public class AccountController {
     @PostMapping(value = "/loginByEmail",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
     public JsonResult<UserLoginVO> loginByEmail(
             @Parameter(description = "用户邮箱", required = true)
-            @RequestParam String userEmail,
+            @RequestParam @Email String userEmail,
             @Parameter(description = "初步加密后的密码", required = true)
-            @RequestParam String password){
+            @RequestParam @Length(min=32,max=32) String password){
             return JsonResult.ok(new UserLoginVO());
     }
 
@@ -95,10 +110,10 @@ public class AccountController {
     @Operation(summary = "重置登录密码", description = "通过邮箱,密码,验证码重置密码")
     @PostMapping(value = "/resetLoginPassword",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
     public JsonResult<Boolean> resetLoginPassword(
-            @Parameter(description = "用户邮箱:需要符合邮箱格式", required = true)
+            @Parameter(description = "用户邮箱", required = true)
             @RequestParam @Email String userEmail,
-            @Parameter(description = "用户密码:长度需要在6和30之间", required = true)
-            @RequestParam @Length(min=6,max=30) String password,
+            @Parameter(description = "用户密码", required = true)
+            @RequestParam @Length(min=32,max=32) String password,
             @Parameter(description = "邮箱验证码", required = true)
             @RequestParam String verCode){
 
