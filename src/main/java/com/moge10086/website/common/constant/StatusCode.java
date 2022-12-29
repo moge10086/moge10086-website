@@ -76,6 +76,10 @@ public class StatusCode {
      */
     static public int ERROR_FOLLOW=432;
     /**
+     * 邮件发送错误
+     */
+    static public int ERROR_EMAIL=442;
+    /**
      * 未知的错误
      */
     static public int UNKNOWN_ERROR=500;
