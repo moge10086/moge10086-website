@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moge10086.website.mapper.UserInfoMapper">
+    <resultMap id="BaseUserVOResultMap" type="com.moge10086.website.domain.vo.user.BaseUserVO">
+        <id property="userId" column="user_id" />
+        <result property="userName" column="user_name"/>
+        <result property="sign" column="sign"/>
+        <result property="avatarImg" column="avatar_img"/>
+        <result property="role" column="role"/>
+    </resultMap>
 
+    <select id="getUserVO" resultMap="BaseUserVOResultMap">
+        SELECT user_id,user_name,sign,avatar_img,role
+        FROM user_info
+        WHERE user_id=#{userId}
+    </select>
 </mapper>

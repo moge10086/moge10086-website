@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
  * @author 22872
  */
 public interface EmailCodeRedisService {
-    public static final String prefix="EmailCode:";
+    String PREFIX ="EmailCode:";
 
     /**
      * 判断key是否存在
@@ -37,7 +37,7 @@ public interface EmailCodeRedisService {
      * @param key
      * @return
      */
-    Object get(String key);
+    EmailCode get(String key);
 
     /**
      * 获得key剩余过期时间

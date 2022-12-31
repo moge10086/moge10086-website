@@ -2,4 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.moge10086.website.mapper.UserAccountMapper">
 
+    <insert id="insertUserAccount" parameterType="com.moge10086.website.domain.model.UserAccount" useGeneratedKeys = "true" keyProperty = "userId">
+        INSERT INTO user_account(create_time,update_time,email,password)
+        VALUES(#{createTime},#{updateTime},#{email},#{password});
+    </insert>
 </mapper>

@@ -1,6 +1,7 @@
 package com.moge10086.website.domain.vo.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.beans.BeanUtils;
 
 /**
  * @author sq
@@ -8,20 +9,27 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "用户登录信息")
 public class UserLoginVO extends BaseUserVO {
     @Schema(description = "登录凭证")
-    private String userTokenJwt;
+    private String userToken;
 
-    public String getUserTokenJwt() {
-        return userTokenJwt;
+    public UserLoginVO() {
     }
 
-    public void setUserTokenJwt(String userTokenJwt) {
-        this.userTokenJwt = userTokenJwt;
+    public UserLoginVO(BaseUserVO baseUserVO) {
+        BeanUtils.copyProperties(baseUserVO, this);
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 
     @Override
     public String toString() {
         return "UserLoginVO{" +
-                "userTokenJwt='" + userTokenJwt + '\'' +
+                "userToken='" + userToken + '\'' +
                 "} " + super.toString();
     }
 }

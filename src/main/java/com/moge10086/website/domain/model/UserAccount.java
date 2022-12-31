@@ -5,13 +5,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
  * @author sq
  */
 @TableName("user_account")
-public class UserAccount implements Serializable,Cloneable{
+public class UserAccount implements Serializable{
     /** 用户ID */
     @TableId
     private Long userId ;
@@ -24,6 +25,20 @@ public class UserAccount implements Serializable,Cloneable{
     /** 密码 */
     private String password ;
 
+    public UserAccount() {
+    }
+
+    public UserAccount(Date createTime, Date updateTime, String email, String password) {
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.email = email;
+        this.password = password;
+    }
+
+    public static UserAccount createUserAccount(String email, String password){
+        Date now = new Date();
+        return new UserAccount(now,now,email,password);
+    }
     /** 用户ID */
     public Long getUserId(){
         return this.userId;

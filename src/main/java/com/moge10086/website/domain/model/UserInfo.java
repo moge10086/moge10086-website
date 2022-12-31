@@ -2,17 +2,28 @@ package com.moge10086.website.domain.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.moge10086.website.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import static com.moge10086.website.enums.Role.NORMAL_USER;
 
 /**
  * @author sq
  */
 @Schema(name = "用户信息",description = "")
 @TableName("user_info")
-public class UserInfo implements Serializable,Cloneable{
+public class UserInfo implements Serializable{
+    /**
+     * 默认头像
+     */
+    public static String DEFAULT_AVATAR_IMG="http://p.ananas.chaoxing.com/star3/origin/102ec8c2795217cb0495b8f47d51c46e.png";
+    /**
+     * 默认签名
+     */
+    public static String DEFAULT_SIGN="该用户什么也没写。";
     /** 用户ID */
     @Schema(name = "用户ID",description = "")
     @TableId
@@ -35,6 +46,24 @@ public class UserInfo implements Serializable,Cloneable{
     /** 身份 */
     @Schema(name = "身份",description = "")
     private Integer role ;
+
+    public UserInfo() {
+    }
+
+    public UserInfo(Long userId, String userName, Date createTime, Date updateTime, String sign, String avatarImg, Integer role) {
+        this.userId = userId;
+        this.userName = userName;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.sign = sign;
+        this.avatarImg = avatarImg;
+        this.role = role;
+    }
+
+    public static UserInfo createDefaultUserInfo(Long userId){
+        Date now =new Date();
+        return new UserInfo(userId,"UUID_"+userId,now,now,DEFAULT_SIGN,DEFAULT_AVATAR_IMG, NORMAL_USER.type);
+    }
 
     /** 用户ID */
     public Long getUserId(){

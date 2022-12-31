@@ -20,29 +20,36 @@ public class EmailCodeRedisServiceImpl implements EmailCodeRedisService {
 
     @Override
     public Boolean hasKey(String key) {
-        return redisTemplate.hasKey(prefix+key);
+        //todo 使用切面编程消除PREFIX
+        return redisTemplate.hasKey(PREFIX+key);
     }
 
     @Override
     public void set(String key, EmailCode value, Integer time, TimeUnit timeUnit) {
         ValueOperations<String,EmailCode> vo =redisTemplate.opsForValue();
-        vo.set(prefix+key,value,time,timeUnit);
+        vo.set(PREFIX+key,value,time,timeUnit);
     }
 
     @Override
     public void set(String key, EmailCode value) {
         ValueOperations<String,EmailCode> vo =redisTemplate.opsForValue();
-        vo.set(prefix+key,value);
+        //更新过期时间
+        Long expire=redisTemplate.getExpire(PREFIX+key,TimeUnit.SECONDS);
+        if (expire==null||expire<0){
+            //取值时已经过期了则不再设置
+            return;
+        }
+        vo.set(PREFIX+key,value,expire,TimeUnit.SECONDS);
     }
 
     @Override
     public EmailCode get(String key) {
         ValueOperations<String,EmailCode> vo =redisTemplate.opsForValue();
-        return vo.get(prefix+key);
+        return vo.get(PREFIX+key);
     }
 
     @Override
     public Long getExpire(String key) {
-        return redisTemplate.getExpire(prefix+key);
+        return redisTemplate.getExpire(PREFIX+key);
     }
 }

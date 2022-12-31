@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,18 @@ public class GlobalExceptionHandler {
             errorMsg.add(error.getDefaultMessage());
         }
         return JsonResult.errorMsg(StatusCode.ERROR_INPUT,String.join(";\n ", errorMsg)+';');
+    }
+    /**
+     * 参数校验异常
+     * @param resp
+     * @param ex
+     * @return
+     * @throws IOException
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public JsonResult<String> constraintViolationException(HttpServletResponse resp, ConstraintViolationException ex) throws IOException {
+        String result = ex.getMessage();
+        return JsonResult.errorMsg(StatusCode.UNKNOWN_ERROR,"输入错误:"+result);
     }
 
     /**
