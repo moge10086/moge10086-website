@@ -13,7 +13,6 @@ import com.moge10086.website.service.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
 
 /**
  * @author sq
@@ -41,7 +41,7 @@ public class AccountController {
 
     /**
      * @description 验证该邮箱是否被注册,true为已被注册
-     * @param userEmail
+     * @param userEmail 邮箱
      * @return JsonResult<Boolean>
      */
     @Operation(summary = "验证邮箱是否被注册", description = "验证该邮箱是否被注册,存在则返回true")
@@ -63,9 +63,9 @@ public class AccountController {
     @PostMapping(value = "/registerOrResetByEmail",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
     public JsonResult<UserLoginVO> registerByEmail(
             @Parameter(description = "用户邮箱:长度需要在5和40之间", required = true)
-            @RequestParam @Length(min=5,max=40) String userEmail,
+            @RequestParam @Size(min=5,max=40,message = "用户邮箱:长度需要在5和40之间") String userEmail,
             @Parameter(description = "用户密码:32位加密后的MD5字符串", required = true)
-            @RequestParam @Length(min=32,max=32) String password,
+            @RequestParam @Size(min=32,max=32,message = "用户密码:32位加密后的MD5字符串") String password,
             @Parameter(description = "邮箱验证码", required = true)
             @RequestParam String code){
         //从redis中取出验证码
@@ -94,9 +94,9 @@ public class AccountController {
     @PostMapping(value = "/loginByEmail",consumes = {"application/x-www-form-urlencoded;charset=UTF-8"})
     public JsonResult<UserLoginVO> loginByEmail(
             @Parameter(description = "用户邮箱", required = true)
-            @RequestParam @Email String userEmail,
+            @RequestParam @Email(message = "非法的邮件地址") String userEmail,
             @Parameter(description = "初步加密后的密码", required = true)
-            @RequestParam @Length(min=32,max=32) String password){
+            @RequestParam @Size(min=32,max=32) String password){
         Long userId = userAccountService.loginByEmailAndPwd(userEmail, PasswordUtils.md5Password(password));
         if (userId==null){
             return JsonResult.errorMsg(StatusCode.ERROR_LOGIN,"用户不存在或密码错误");

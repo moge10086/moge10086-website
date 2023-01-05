@@ -1,9 +1,6 @@
 package com.moge10086.website.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.moge10086.website.common.constant.StatusCode;
-import com.moge10086.website.common.utils.JsonResult;
-import com.moge10086.website.common.utils.PasswordUtils;
 import com.moge10086.website.domain.model.UserAccount;
 import com.moge10086.website.domain.model.UserInfo;
 import com.moge10086.website.mapper.UserAccountMapper;
@@ -20,8 +17,6 @@ import java.util.Date;
  */
 @Service
 public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserAccount> implements UserAccountService {
-//    @Resource
-//    UserAccountService userAccountService;
     @Resource
     UserAccountMapper userAccountMapper;
     @Resource

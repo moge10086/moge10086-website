@@ -80,6 +80,10 @@ public class StatusCode {
      */
     static public int ERROR_EMAIL=442;
     /**
+     * 参数错误
+     */
+    static public int INVALID_ARGUMENT=445;
+    /**
      * 未知的错误
      */
     static public int UNKNOWN_ERROR=500;

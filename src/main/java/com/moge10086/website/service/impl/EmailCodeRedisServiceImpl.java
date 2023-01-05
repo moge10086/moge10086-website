@@ -2,7 +2,6 @@ package com.moge10086.website.service.impl;
 
 import com.moge10086.website.domain.dto.EmailCode;
 import com.moge10086.website.service.EmailCodeRedisService;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;

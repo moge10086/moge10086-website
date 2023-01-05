@@ -8,7 +8,6 @@ import com.moge10086.website.service.UserAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.util.concurrent.TimeUnit;
 
 
@@ -53,7 +53,7 @@ public class EmailController {
     @GetMapping(value = "/sendCodeByEmail", consumes = {MediaType.ALL_VALUE})
     public JsonResult<String> sendCodeByEmail(
             @Parameter(description = "用户邮箱", required = true)
-            @RequestParam @Email String userEmail) {
+            @RequestParam @Email(message = "非法的邮件地址") @NotBlank String userEmail) {
         //getExpire不存在则返回-2,验证请求间隔时间
         if (emailCodeRedisService.getExpire(userEmail) >= EmailCode.CAPTCHA_VALID_TIME - EmailCode.SEND_EMAIL_INTERVAL) {
             return JsonResult.errorMsg(StatusCode.REQUEST_FREQUENTLY, "验证码频繁请求");
