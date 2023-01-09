@@ -41,7 +41,7 @@ public class AccountController {
 
     /**
      * @description 验证该邮箱是否被注册,true为已被注册
-     * @param userEmail 邮箱
+     * @param userEmail
      * @return JsonResult<Boolean>
      */
     @Operation(summary = "验证邮箱是否被注册", description = "验证该邮箱是否被注册,存在则返回true")

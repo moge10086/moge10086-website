@@ -1,4 +1,4 @@
-package com.moge10086.website.common.config;
+package com.moge10086.website.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

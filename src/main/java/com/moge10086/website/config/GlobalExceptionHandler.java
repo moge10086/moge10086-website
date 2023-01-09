@@ -1,7 +1,8 @@
-package com.moge10086.website.common.config;
+package com.moge10086.website.config;
 
 import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.utils.JsonResult;
+import io.jsonwebtoken.JwtException;
 import org.springframework.mail.MailException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
@@ -37,6 +38,17 @@ public class GlobalExceptionHandler {
         return JsonResult.errorMsg(StatusCode.UNKNOWN_ERROR,"未知的错误:"+result);
     }
 
+    /**
+     * JWT解析异常：无效、过期
+     * @param resp
+     * @param ex
+     * @return
+     * @throws IOException
+     */
+    @ExceptionHandler(JwtException.class)
+    public JsonResult<String> handleJwtException(HttpServletResponse resp, Exception ex) throws IOException {
+        return JsonResult.errorMsg(StatusCode.ERROR_TOKEN,"用户信息无效或过期");
+    }
     /**
      * 参数为实体类,
      * @param resp
