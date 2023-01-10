@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 
 /**
  * @author 22872
@@ -27,7 +28,7 @@ public class PostOptServiceImpl implements PostOptService {
     public Boolean validatePermissionByUserIdAndPostId(Long userId,Long postId) {
         Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
         if (!userId.equals(authorId)){
-            //authorId不存在或与userId不对应
+            //帖子不存在或者authorId与userId不对应
             return false;
         }
         Integer postState= postBaseMapper.getPostStateByPostId(postId);
@@ -58,4 +59,16 @@ public class PostOptServiceImpl implements PostOptService {
         //更新PostArticle：articleContent
         postArticleMapper.updatePostArticle(editPostArticleDTO);
     }
+
+    @Override
+    public Boolean deletePost(Long postId) {
+        return postBaseMapper.updatePostState(postId,PostStatus.DELETE.type,new Date());
+    }
+
+    @Override
+    public Boolean publishPost(Long postId) {
+        //todo 代管理员功能完成后改为审核状态
+        return postBaseMapper.updatePostState(postId,PostStatus.SHOW.type,new Date());
+    }
+
 }

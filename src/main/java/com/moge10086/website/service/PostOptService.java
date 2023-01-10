@@ -29,4 +29,18 @@ public interface PostOptService {
      * @param postArticleBO
      */
     void editPostArticle(Long authorId,PostArticleBO postArticleBO);
+
+    /**
+     * 删除帖子，逻辑删除
+     * @param postId
+     * @return
+     */
+    Boolean deletePost(Long postId);
+
+    /**
+     * 发布帖子
+     * @param postId
+     * @return
+     */
+    Boolean publishPost(Long postId);
 }

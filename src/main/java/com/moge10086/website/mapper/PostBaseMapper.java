@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moge10086.website.domain.dto.post.EditPostDTO;
 import com.moge10086.website.domain.model.PostBase;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.Date;
 
 /**
  * @author 22872
@@ -37,4 +40,14 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
      * @param editPostDTO
      */
     void updatePostBase(EditPostDTO editPostDTO);
+
+    /**
+     * 删除帖子（设置帖子状态为删除）
+     * @param postId
+     * @param postState
+     * @param updateTime
+     * @return
+     */
+    @Update("update post_base set post_state = #{postState},update_time = #{updateTime} where post_id=#{postId}")
+    Boolean updatePostState(Long postId, Integer postState, Date updateTime);
 }

@@ -29,7 +29,7 @@ public class PostOptController {
     @Resource
     PostOptService postOptService;
     /**
-     * @description 上传文章进行注册,如果成功则返回用户信息
+     * @description 上传文章进行保存/编辑,如果成功则返回用户信息
      * @return JsonResult<Long>
      */
     @Operation(summary = "保存、编辑文章", description = "保存、编辑文章，如果有id则为编辑、无id则为保存，返回帖子id")
@@ -58,5 +58,49 @@ public class PostOptController {
         }
         //返回id
         return JsonResult.ok(postId);
+    }
+
+    /**
+     * 删除帖子
+     * @param token
+     * @param postId
+     * @return
+     */
+    @Operation(summary = "删除帖子", description = "删除帖子，如果删除成功返回true反之为false")
+    @PostMapping(value = "/deletePost",consumes = {"application/x-www-form-urlencoded; charset=UTF-8"})
+    public JsonResult<Boolean> deletePost(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "帖子ID", required = true)
+            @RequestParam Long postId){
+        Long userId=JwtUtils.getUserIdFromToken(token);
+        //判断该帖子是否归属于该用户，状态是否可以被删除 todo：使用validateDeletePermissionByUserIdAndPostId
+        if (!postOptService.validatePermissionByUserIdAndPostId(userId, postId)){
+            return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
+        }
+        //执行删除并返回结果
+        return JsonResult.ok(postOptService.deletePost(postId));
+    }
+
+    /**
+     * 发布帖子，设置帖子状态为审核/展示
+     * @param token
+     * @param postId
+     * @return
+     */
+    @Operation(summary = "发布帖子", description = "发布帖子，使文章处于审核/展示状态")
+    @PostMapping(value = "/publishPost",consumes = {"application/x-www-form-urlencoded; charset=UTF-8"})
+    public JsonResult<Boolean> publishPost(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "帖子ID", required = true)
+            @RequestParam Long postId){
+        Long userId=JwtUtils.getUserIdFromToken(token);
+        //判断该帖子是否归属于该用户，状态是否可以被发布
+        if (!postOptService.validatePermissionByUserIdAndPostId(userId, postId)){
+            return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
+        }
+        //发布并返回结果
+        return JsonResult.ok(postOptService.publishPost(postId));
     }
 }
