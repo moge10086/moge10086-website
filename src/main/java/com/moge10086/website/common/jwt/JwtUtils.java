@@ -70,7 +70,7 @@ public class JwtUtils {
      */
     public static Long getUserIdFromToken(String token){
         Claims claims = JwtUtils.parseJwsToClaims(token);
-        return (Long)claims.get("userId");
+        return Long.parseLong(claims.get("userId").toString());
     }
 
     /**

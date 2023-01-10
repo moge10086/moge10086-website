@@ -3,6 +3,7 @@ package com.moge10086.website.domain.bo;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * @author 邵权
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class PostArticleBO extends PostBO {
     @Schema(description = "文章内容")
     @NotBlank(message = "文章内容不能为空")
+    @Size(max = 50000,message = "内容长度超出")
     private String articleContent;
 
     public String getArticleContent() {

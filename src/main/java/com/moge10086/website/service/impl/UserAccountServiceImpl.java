@@ -35,11 +35,11 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
     @Transactional
     public Long registerUser(String email, String password) {
         //生成UserAccount实体
-        UserAccount userAccount=UserAccount.createUserAccount(email,password);
+        UserAccount userAccount=UserAccount.initUserAccount(email,password);
         //执行插入SQL
         userAccountMapper.insertUserAccount(userAccount);
         //生成UserInfo实体
-        UserInfo userInfo=UserInfo.createDefaultUserInfo(userAccount.getUserId());
+        UserInfo userInfo=UserInfo.initUserInfo(userAccount.getUserId());
         //执行插入SQL
         userInfoMapper.insert(userInfo);
         return userAccount.getUserId();

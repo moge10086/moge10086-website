@@ -2,7 +2,6 @@ package com.moge10086.website.domain.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.moge10086.website.enums.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
@@ -60,7 +59,7 @@ public class UserInfo implements Serializable{
         this.role = role;
     }
 
-    public static UserInfo createDefaultUserInfo(Long userId){
+    public static UserInfo initUserInfo(Long userId){
         Date now =new Date();
         return new UserInfo(userId,"UUID_"+userId,now,now,DEFAULT_SIGN,DEFAULT_AVATAR_IMG, NORMAL_USER.type);
     }

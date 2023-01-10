@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moge10086.website.mapper.PostBaseMapper">
+    <insert id="insertPostBase" parameterType="com.moge10086.website.domain.model.PostBase" useGeneratedKeys = "true" keyProperty = "postId">
+        INSERT INTO post_base(author_id,create_time,update_time,title,summary,cover_img,post_type,post_state)
+        VALUES(#{authorId},#{createTime},#{updateTime},#{title},#{summary},#{coverImg},#{postType},#{postState});
+    </insert>
+
+    <update id="updatePostBase" parameterType="com.moge10086.website.domain.dto.post.EditPostDTO">
+        UPDATE post_base
+        SET update_time=#{updateTime}, title=#{title}, summary=#{summary},cover_img=#{coverImg},post_state=#{postState}
+        WHERE post_id= #{postId};
+    </update>
+</mapper>

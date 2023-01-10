@@ -1,5 +1,8 @@
 package com.moge10086.website.domain.model;
 
+import com.moge10086.website.domain.bo.PostBO;
+import com.moge10086.website.enums.PostStatus;
+
 import java.util.Date;
 /**
  * 帖子基本信息;
@@ -10,7 +13,7 @@ public class PostBase{
     /** 帖子ID */
     private Long postId ;
     /** 作者ID */
-    private String authorId ;
+    private Long authorId ;
     /** 创建时间 */
     private Date createTime ;
     /** 更新时间 */
@@ -26,6 +29,27 @@ public class PostBase{
     /** 帖子状态;草稿（0）、待审核（5）、上架（10）、下架（草稿）、封禁（15）、删除（-1） */
     private Integer postState ;
 
+    public PostBase() {
+    }
+
+    public PostBase(Long postId, Long authorId, Date createTime, Date updateTime, String title, String summary, String coverImg, Integer postType, Integer postState) {
+        this.postId = postId;
+        this.authorId = authorId;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.title = title;
+        this.summary = summary;
+        this.coverImg = coverImg;
+        this.postType = postType;
+        this.postState = postState;
+    }
+
+    public static PostBase initPostBase(Long authorId, Integer postType, PostBO postBO){
+        Date now = new Date();
+        return new PostBase(null,authorId,now,now,
+                postBO.getTitle(),postBO.getSummary(),postBO.getCoverImg(),
+                postType, PostStatus.DRAFT.type);
+    }
     /** 帖子ID */
     public Long getPostId(){
         return this.postId;
@@ -35,11 +59,11 @@ public class PostBase{
         this.postId=postId;
     }
     /** 作者ID */
-    public String getAuthorId(){
+    public Long getAuthorId(){
         return this.authorId;
     }
     /** 作者ID */
-    public void setAuthorId(String authorId){
+    public void setAuthorId(Long authorId){
         this.authorId=authorId;
     }
     /** 创建时间 */

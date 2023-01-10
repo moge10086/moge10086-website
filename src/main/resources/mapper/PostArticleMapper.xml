@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moge10086.website.mapper.PostArticleMapper">
+    <update id="updatePostArticle" parameterType="com.moge10086.website.domain.dto.post.EditPostArticleDTO">
+        UPDATE post_article
+        SET update_time=#{updateTime},article_content=#{articleContent}
+        WHERE post_id= #{postId};
+    </update>
+</mapper>

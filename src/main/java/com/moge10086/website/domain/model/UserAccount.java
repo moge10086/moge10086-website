@@ -2,10 +2,8 @@ package com.moge10086.website.domain.model;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -35,7 +33,7 @@ public class UserAccount implements Serializable{
         this.password = password;
     }
 
-    public static UserAccount createUserAccount(String email, String password){
+    public static UserAccount initUserAccount(String email, String password){
         Date now = new Date();
         return new UserAccount(now,now,email,password);
     }
