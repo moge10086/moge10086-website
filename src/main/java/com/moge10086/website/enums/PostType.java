@@ -6,7 +6,7 @@ package com.moge10086.website.enums;
  */
 public enum PostType {
     //所有类型
-    ALL_TYPE(0,"所有类型"),
+//    ALL_TYPE(0,"所有类型"),
     //文章 没有下载链接的分享
     ARTICLE(5,"文章"),
     //聊天 用来聊天,帖子没有文本只有评论
@@ -22,5 +22,21 @@ public enum PostType {
     PostType(Integer type, String value) {
         this.type = type;
         this.value = value;
+    }
+    public static PostType getEnumByType(int type){
+        for (PostType postType : values()) {
+            if (postType.type == type) {
+                return postType;
+            }
+        }
+        return null;
+    }
+    public static Boolean isInclude(int type){
+        for (PostType postType : values()) {
+            if (postType.type == type) {
+                return true;
+            }
+        }
+        return false;
     }
 }

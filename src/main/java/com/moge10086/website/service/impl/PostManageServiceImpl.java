@@ -1,14 +1,19 @@
 package com.moge10086.website.service.impl;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moge10086.website.domain.bo.PostArticleBO;
-import com.moge10086.website.domain.dto.post.EditPostArticleDTO;
+import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
 import com.moge10086.website.domain.model.PostArticle;
 import com.moge10086.website.domain.model.PostBase;
-import com.moge10086.website.enums.PostStatus;
+import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.vo.post.ArticleEditVO;
+import com.moge10086.website.domain.vo.post.BasePostEditVO;
+import com.moge10086.website.domain.vo.post.PostManageVO;
+import com.moge10086.website.enums.PostState;
 import com.moge10086.website.enums.PostType;
 import com.moge10086.website.mapper.PostArticleMapper;
 import com.moge10086.website.mapper.PostBaseMapper;
-import com.moge10086.website.service.PostOptService;
+import com.moge10086.website.service.PostManageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +24,7 @@ import java.util.Date;
  * @author 22872
  */
 @Service
-public class PostOptServiceImpl implements PostOptService {
+public class PostManageServiceImpl implements PostManageService {
     @Resource
     PostBaseMapper postBaseMapper;
     @Resource
@@ -32,8 +37,8 @@ public class PostOptServiceImpl implements PostOptService {
             return false;
         }
         Integer postState= postBaseMapper.getPostStateByPostId(postId);
-        //如果帖子状态为锁定或删除则不可操作
-        return !postState.equals(PostStatus.DELETE.type) && !postState.equals(PostStatus.LOCK.type);
+        //如果帖子状态为锁定或删除则不可操作 todo 锁定功能代考虑，目前当锁定不存在
+        return !postState.equals(PostState.DELETE.type) && !postState.equals(PostState.LOCK.type);
     }
 
     @Override
@@ -53,7 +58,7 @@ public class PostOptServiceImpl implements PostOptService {
     public void editPostArticle(Long authorId, PostArticleBO postArticleBO) {
         //更新title、summary、coverImg、articleContent、updateTime
         //生成文章更新实体
-        EditPostArticleDTO editPostArticleDTO=EditPostArticleDTO.initEditPostArticleDTO(postArticleBO);
+        PostArticleEditDTO editPostArticleDTO= PostArticleEditDTO.initEditPostArticleDTO(postArticleBO);
         //更新postBase
         postBaseMapper.updatePostBase(editPostArticleDTO);
         //更新PostArticle：articleContent
@@ -62,13 +67,31 @@ public class PostOptServiceImpl implements PostOptService {
 
     @Override
     public Boolean deletePost(Long postId) {
-        return postBaseMapper.updatePostState(postId,PostStatus.DELETE.type,new Date());
+        return postBaseMapper.updatePostState(postId, PostState.DELETE.type,new Date());
     }
 
     @Override
     public Boolean publishPost(Long postId) {
         //todo 代管理员功能完成后改为审核状态
-        return postBaseMapper.updatePostState(postId,PostStatus.SHOW.type,new Date());
+        return postBaseMapper.updatePostState(postId, PostState.SHOW.type,new Date());
+    }
+
+    @Override
+    public Boolean cancelPost(Long postId) {
+        return postBaseMapper.updatePostState(postId, PostState.DRAFT.type,new Date());
+    }
+
+    @Override
+    public ArticleEditVO getArticleEditView(Long postId) {
+        BasePostEditVO basePostEditVO =postBaseMapper.getPostEditView(postId);
+        ArticleEditVO articleEditVO = ArticleEditVO.initFromBase(basePostEditVO);
+        articleEditVO.setArticleContent(postArticleMapper.getArticleContent(postId));
+        return articleEditVO;
+    }
+
+    @Override
+    public IPage<PostManageVO> getManagePostList(IPage<PostManageVO> page, QueryPostManageListBO queryPostManageListBO) {
+        return postBaseMapper.listPostManageViews(page,queryPostManageListBO);
     }
 
 }

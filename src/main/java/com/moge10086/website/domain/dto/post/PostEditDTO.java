@@ -1,15 +1,15 @@
 package com.moge10086.website.domain.dto.post;
 
 import com.moge10086.website.domain.bo.PostBO;
-import com.moge10086.website.enums.PostStatus;
+import com.moge10086.website.enums.PostState;
 
 import java.util.Date;
 
 /**
- * 帖子更新时传递的对象，包含需要更新的属性
+ * 帖子更新时传递给数据库的对象，包含需要更新的属性
  * @author 22872
  */
-public class EditPostDTO {
+public class PostEditDTO {
     /** 帖子ID */
     private Long postId ;
     /** 更新时间 */
@@ -27,10 +27,10 @@ public class EditPostDTO {
         return postId;
     }
 
-    public EditPostDTO() {
+    public PostEditDTO() {
     }
 
-    public EditPostDTO(Long postId, Date updateTime, String title, String summary, String coverImg, Integer postState) {
+    public PostEditDTO(Long postId, Date updateTime, String title, String summary, String coverImg, Integer postState) {
         this.postId = postId;
         this.updateTime = updateTime;
         this.title = title;
@@ -39,8 +39,8 @@ public class EditPostDTO {
         this.postState = postState;
     }
 
-    public static EditPostDTO initEditPostDTO(PostBO postBO) {
-        return new EditPostDTO(postBO.getPostId(),new Date(),postBO.getTitle(),postBO.getSummary(),postBO.getCoverImg(),PostStatus.DRAFT.type);
+    public static PostEditDTO initEditPostDTO(PostBO postBO) {
+        return new PostEditDTO(postBO.getPostId(),new Date(),postBO.getTitle(),postBO.getSummary(),postBO.getCoverImg(), PostState.DRAFT.type);
     }
 
     public void setPostId(Long postId) {

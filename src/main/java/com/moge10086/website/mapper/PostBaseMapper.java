@@ -1,8 +1,13 @@
 package com.moge10086.website.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.moge10086.website.domain.dto.post.EditPostDTO;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.moge10086.website.domain.dto.post.PostEditDTO;
 import com.moge10086.website.domain.model.PostBase;
+import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.vo.post.BasePostEditVO;
+import com.moge10086.website.domain.vo.post.PostManageVO;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -37,9 +42,9 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
 
     /**
      * 更新编辑后的帖子
-     * @param editPostDTO
+     * @param postEditDTO
      */
-    void updatePostBase(EditPostDTO editPostDTO);
+    void updatePostBase(PostEditDTO postEditDTO);
 
     /**
      * 删除帖子（设置帖子状态为删除）
@@ -50,4 +55,19 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
      */
     @Update("update post_base set post_state = #{postState},update_time = #{updateTime} where post_id=#{postId}")
     Boolean updatePostState(Long postId, Integer postState, Date updateTime);
+
+    /**
+     * 获得帖子编辑展示内容
+     * @param postId
+     * @return
+     */
+    BasePostEditVO getPostEditView(Long postId);
+
+    /**
+     * 获得用户帖子管理展示列表
+     * @param page
+     * @param queryPostManageListBO
+     * @return
+     */
+    IPage<PostManageVO> listPostManageViews(IPage<PostManageVO> page,@Param("queryBO") QueryPostManageListBO queryPostManageListBO);
 }

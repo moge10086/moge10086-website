@@ -4,7 +4,7 @@ package com.moge10086.website.enums;
  * @author 邵权
  * @describe 帖子状态 草稿（0）、待审核（5）、展示（10）、下架（草稿）、锁定（15）、删除（-1）
  */
-public enum PostStatus {
+public enum PostState {
     //草稿
     DRAFT(0, "草稿"),
     //审核中
@@ -20,8 +20,24 @@ public enum PostStatus {
     public final Integer type;
     public final String value;
 
-    PostStatus(Integer type, String value) {
+    PostState(Integer type, String value) {
         this.type = type;
         this.value = value;
+    }
+    public static PostState getEnumByType(int type){
+        for (PostState postState : values()) {
+            if (postState.type == type) {
+                return postState;
+            }
+        }
+        return null;
+    }
+    public static Boolean isInclude(int type){
+        for (PostState postState : values()) {
+            if (postState.type == type) {
+                return true;
+            }
+        }
+        return false;
     }
 }

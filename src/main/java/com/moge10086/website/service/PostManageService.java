@@ -1,13 +1,17 @@
 package com.moge10086.website.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moge10086.website.domain.bo.PostArticleBO;
+import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.vo.post.ArticleEditVO;
+import com.moge10086.website.domain.vo.post.PostManageVO;
 
 /**
  * @author 22872
  */
-public interface PostOptService {
+public interface PostManageService {
     /**
-     * 验证该用户能否操作该帖子以及该帖子能否被操作
+     * 验证该用户能否操作该帖子以及该帖子能否被操作（锁定、删除则无法操作返回false）
      * @param userId
      * @param postId
      * @return Boolean
@@ -43,4 +47,26 @@ public interface PostOptService {
      * @return
      */
     Boolean publishPost(Long postId);
+
+    /**
+     * 撤销帖子的展示
+     * @param postId
+     * @return
+     */
+    Boolean cancelPost(Long postId);
+
+    /**
+     * 获取文章编辑内容
+     * @param postId
+     * @return
+     */
+    ArticleEditVO getArticleEditView(Long postId);
+
+    /**
+     * 返回用户帖子管理展示列表
+     * @param page
+     * @param queryPostManageListBO
+     * @return
+     */
+    IPage<PostManageVO> getManagePostList(IPage<PostManageVO> page,QueryPostManageListBO queryPostManageListBO);
 }

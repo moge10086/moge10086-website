@@ -76,6 +76,10 @@ public class StatusCode {
      */
     static public int ERROR_FOLLOW=432;
     /**
+     * 错误的查询参数
+     */
+    static public int ERROR_QUERY_ARGUMENT=440;
+    /**
      * 邮件发送错误
      */
     static public int ERROR_EMAIL=442;

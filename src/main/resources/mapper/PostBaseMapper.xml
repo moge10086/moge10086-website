@@ -6,9 +6,46 @@
         VALUES(#{authorId},#{createTime},#{updateTime},#{title},#{summary},#{coverImg},#{postType},#{postState});
     </insert>
 
-    <update id="updatePostBase" parameterType="com.moge10086.website.domain.dto.post.EditPostDTO">
+    <update id="updatePostBase" parameterType="com.moge10086.website.domain.dto.post.PostEditDTO">
         UPDATE post_base
         SET update_time=#{updateTime}, title=#{title}, summary=#{summary},cover_img=#{coverImg},post_state=#{postState}
         WHERE post_id= #{postId};
     </update>
+    <resultMap id="BasePostEditViewVOResultMap" type="com.moge10086.website.domain.vo.post.BasePostEditVO">
+        <id property="postId" column="post_id" />
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="coverImg" column="cover_img"/>
+    </resultMap>
+    <select id="getPostEditView" resultMap="BasePostEditViewVOResultMap">
+        SELECT post_id,title,summary,cover_img
+        from post_base
+        where post_id=#{postId}
+    </select>
+    <resultMap id="PostManageVOResultMap" type="com.moge10086.website.domain.vo.post.PostManageVO">
+        <id property="postId" column="post_id"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="coverImg" column="cover_img"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="postType" column="post_type"/>
+        <result property="postState" column="post_state"/>
+    </resultMap>
+    <select id="listPostManageViews"
+            parameterType="com.moge10086.website.domain.qo.QueryPostManageListBO"
+            resultMap="PostManageVOResultMap">
+        SELECT post_id,title,summary,cover_img,update_time,post_type,post_state
+        FROM post_base
+        WHERE author_id=#{queryBO.authorId} AND post_type=#{queryBO.postType} AND post_state=#{queryBO.postState}
+        ORDER BY
+        <if test="queryBO.sortType == @com.moge10086.website.enums.SortType@TIME.type">
+            update_time
+        </if>
+        <if test="queryBO.sortOrder == false">
+            DESC
+        </if>
+        <if test="queryBO.sortOrder == true">
+            ASC
+        </if>
+    </select>
 </mapper>

@@ -1,7 +1,7 @@
 package com.moge10086.website.domain.model;
 
 import com.moge10086.website.domain.bo.PostBO;
-import com.moge10086.website.enums.PostStatus;
+import com.moge10086.website.enums.PostState;
 
 import java.util.Date;
 /**
@@ -48,7 +48,7 @@ public class PostBase{
         Date now = new Date();
         return new PostBase(null,authorId,now,now,
                 postBO.getTitle(),postBO.getSummary(),postBO.getCoverImg(),
-                postType, PostStatus.DRAFT.type);
+                postType, PostState.DRAFT.type);
     }
     /** 帖子ID */
     public Long getPostId(){

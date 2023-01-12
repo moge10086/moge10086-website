@@ -5,10 +5,6 @@ package com.moge10086.website.api;
  * @describe 静态变量表
  */
 public class ReferenceValue {
-    /**
-     * 分页返回上限
-     */
-    public static Integer pageSizeLimit=60;
 
     /**
      * 给错误角色(权限)的帖子展示的富文本
