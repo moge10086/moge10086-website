@@ -18,7 +18,7 @@ public class UserInfo implements Serializable{
     /**
      * 默认头像
      */
-    public static String DEFAULT_AVATAR_IMG="http://p.ananas.chaoxing.com/star3/origin/102ec8c2795217cb0495b8f47d51c46e.png";
+    public static String DEFAULT_AVATAR_IMG="https://yun.moge10086.top/%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.svg";
     /**
      * 默认签名
      */

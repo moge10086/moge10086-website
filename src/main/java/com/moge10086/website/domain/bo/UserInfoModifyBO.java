@@ -13,17 +13,18 @@ public class UserInfoModifyBO {
     @JsonIgnore
     private Long userId ;
     /** 用户名 */
-    @Schema(name = "用户名",description = "")
+    @Schema(description = "用户名")
     @Size(min = 1,max = 20,message = "用户名长度在1~20之间")
     @NotBlank(message = "用户名不能为空")
     private String userName ;
     /** 签名 */
-    @Schema(name = "签名",description = "")
+    @Schema(description = "签名")
     @Size(max = 100,message = "签名不能超过100")
     private String sign ;
     /** 头像图片URL */
-    @Schema(name = "头像图片URL",description = "")
+    @Schema(description = "头像图片URL")
     @Size(max = 2048,message = "头像URL长度不能超过2048")
+    @NotBlank(message = "头像不能为空")
     private String avatarImg ;
 
     public Long getUserId() {

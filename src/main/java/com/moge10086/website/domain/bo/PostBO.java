@@ -16,7 +16,7 @@ public class PostBO {
     /** 标题 */
     @Schema(description = "标题",defaultValue = "title")
     @NotBlank(message = "标题不能为空")
-    @Size(min=1,max=40,message = "标题长度需要在1和40之间")
+    @Size(min=5,max=40,message = "标题长度需要在5和40之间")
     private String title;
     /** 本文内容 */
     @Schema(description = "简介",defaultValue = "summary")
