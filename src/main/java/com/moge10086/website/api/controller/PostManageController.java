@@ -7,7 +7,7 @@ import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.bo.PostArticleBO;
 import com.moge10086.website.domain.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
-import com.moge10086.website.domain.vo.post.PostManageVO;
+import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.service.PostManageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -152,7 +152,7 @@ public class PostManageController {
      */
     @Operation(summary = "返回用户帖子管理展示列表", description = "返回用户帖子管理展示列表")
     @PostMapping(value = "/getManagePostList",consumes = {"application/json; charset=UTF-8"})
-    public JsonResult<Page<PostManageVO>> getManagePostList(
+    public JsonResult<Page<BasePostVO>> getManagePostList(
             @Parameter(description = "token", required = true)
             @RequestHeader("Authorization") String token,
             @RequestBody @Valid QueryPostManageListBO queryPostManageListBO){
@@ -161,9 +161,13 @@ public class PostManageController {
         if (!queryPostManageListBO.isValid()){
             return JsonResult.errorMsg(StatusCode.ERROR_QUERY_ARGUMENT,"非法的查询参数");
         }
-        Page<PostManageVO> postManageViewPage=Page.of(queryPostManageListBO.getCurrentPage(),queryPostManageListBO.getPageSize());
-        postManageService.getManagePostList(postManageViewPage,queryPostManageListBO);
-        return JsonResult.ok(postManageViewPage);
+        return JsonResult.ok(postManageService.getManagePostList(queryPostManageListBO));
     }
+    /**
+     * 点赞
+     */
+    /**
+     * 收藏
+     */
 
 }

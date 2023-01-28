@@ -1,10 +1,10 @@
 package com.moge10086.website.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostArticleBO;
 import com.moge10086.website.domain.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
-import com.moge10086.website.domain.vo.post.PostManageVO;
+import com.moge10086.website.domain.vo.post.BasePostVO;
 
 /**
  * @author 22872
@@ -64,9 +64,9 @@ public interface PostManageService {
 
     /**
      * 返回用户帖子管理展示列表
-     * @param page
+     *
      * @param queryPostManageListBO
      * @return
      */
-    IPage<PostManageVO> getManagePostList(IPage<PostManageVO> page,QueryPostManageListBO queryPostManageListBO);
+    Page<BasePostVO> getManagePostList(QueryPostManageListBO queryPostManageListBO);
 }

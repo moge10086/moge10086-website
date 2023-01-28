@@ -1,18 +1,22 @@
 package com.moge10086.website.service.impl;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostArticleBO;
+import com.moge10086.website.domain.dto.PostQueryDTO;
 import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
 import com.moge10086.website.domain.model.PostArticle;
 import com.moge10086.website.domain.model.PostBase;
+import com.moge10086.website.domain.model.PostCount;
 import com.moge10086.website.domain.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostEditVO;
-import com.moge10086.website.domain.vo.post.PostManageVO;
+import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.enums.PostState;
 import com.moge10086.website.enums.PostType;
 import com.moge10086.website.mapper.PostArticleMapper;
 import com.moge10086.website.mapper.PostBaseMapper;
+import com.moge10086.website.mapper.PostCountMapper;
+import com.moge10086.website.mapper.PostQueryMapper;
 import com.moge10086.website.service.PostManageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +33,10 @@ public class PostManageServiceImpl implements PostManageService {
     PostBaseMapper postBaseMapper;
     @Resource
     PostArticleMapper postArticleMapper;
+    @Resource
+    PostCountMapper postCountMapper;
+    @Resource
+    PostQueryMapper postQueryMapper;
     @Override
     public Boolean validatePermissionByUserIdAndPostId(Long userId,Long postId) {
         Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
@@ -44,10 +52,17 @@ public class PostManageServiceImpl implements PostManageService {
     @Override
     @Transactional
     public Long savePostArticle(Long authorId,PostArticleBO postArticleBO) {
+        /* todo
+         * 同时生成post_base,post_count,post_article
+         * 注意事务
+         */
         //分别对PostArticle，PostBase操作
         //生成并插入postBase
         PostBase postBase=PostBase.initPostBase(authorId, PostType.ARTICLE.type,postArticleBO);
         postBaseMapper.insertPostBase(postBase);
+        //生成并插入postCount
+        PostCount postCount=PostCount.initPostCount(postBase.getPostId());
+        postCountMapper.insert(postCount);
         //生成并插入PostArticle
         PostArticle postArticle = PostArticle.initPostArticle(postBase.getPostId(),postArticleBO);
         postArticleMapper.insert(postArticle);
@@ -90,8 +105,11 @@ public class PostManageServiceImpl implements PostManageService {
     }
 
     @Override
-    public IPage<PostManageVO> getManagePostList(IPage<PostManageVO> page, QueryPostManageListBO queryPostManageListBO) {
-        return postBaseMapper.listPostManageViews(page,queryPostManageListBO);
+    public Page<BasePostVO> getManagePostList(QueryPostManageListBO queryPostManageListBO) {
+        //获得帖子ID及帖子基本信息
+        Page<BasePostVO> basePostPage=Page.of(queryPostManageListBO.getCurrentPage(),queryPostManageListBO.getPageSize());
+        postQueryMapper.listBasePosts(basePostPage,PostQueryDTO.generateQuery(queryPostManageListBO));
+        return basePostPage;
     }
 
 }

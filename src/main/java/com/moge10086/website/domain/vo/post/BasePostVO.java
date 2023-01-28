@@ -17,6 +17,34 @@ public class BasePostVO {
     private String coverImg ;
     /** 更新时间 */
     private Date updateTime ;
+    /** 帖子类别;文章、视频、交流等 */
+    private Integer postType ;
+    /** 帖子状态;草稿（0）、待审核（5）、上架（10）、下架（草稿）、封禁（15）、删除（-1） */
+    private Integer postState ;
+    /** 浏览量  */
+    private Integer readCount ;
+    /** 点赞数 */
+    private Integer praiseCount ;
+    /** 收藏数 */
+    private Integer favoriteCount ;
+    /** 评论数 */
+    private Integer commentCount ;
+
+    public Integer getPostState() {
+        return postState;
+    }
+
+    public void setPostState(Integer postState) {
+        this.postState = postState;
+    }
+
+    public Integer getPostType() {
+        return postType;
+    }
+
+    public void setPostType(Integer postType) {
+        this.postType = postType;
+    }
 
     public Long getPostId() {
         return postId;
@@ -58,6 +86,38 @@ public class BasePostVO {
         this.updateTime = updateTime;
     }
 
+    public Integer getReadCount() {
+        return readCount;
+    }
+
+    public void setReadCount(Integer readCount) {
+        this.readCount = readCount;
+    }
+
+    public Integer getPraiseCount() {
+        return praiseCount;
+    }
+
+    public void setPraiseCount(Integer praiseCount) {
+        this.praiseCount = praiseCount;
+    }
+
+    public Integer getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public void setFavoriteCount(Integer favoriteCount) {
+        this.favoriteCount = favoriteCount;
+    }
+
+    public Integer getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Integer commentCount) {
+        this.commentCount = commentCount;
+    }
+
     @Override
     public String toString() {
         return "BasePostVO{" +
@@ -66,6 +126,12 @@ public class BasePostVO {
                 ", summary='" + summary + '\'' +
                 ", coverImg='" + coverImg + '\'' +
                 ", updateTime=" + updateTime +
+                ", postType=" + postType +
+                ", postState=" + postState +
+                ", readCount=" + readCount +
+                ", praiseCount=" + praiseCount +
+                ", favoriteCount=" + favoriteCount +
+                ", commentCount=" + commentCount +
                 '}';
     }
 }

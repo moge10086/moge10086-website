@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moge10086.website.mapper.PostCountMapper">
+
+    <select id="listPostCount" resultType="com.moge10086.website.domain.model.PostCount">
+        select post_id as postId,
+               read_count as readCount,
+               praise_count as praiseCount,
+               favorite_count as favoriteCount,
+               comment_count as commentCount
+        from post_count
+        where post_id in
+        <foreach collection="postIds" item="item" index="index"
+                 open="(" separator="," close=")" nullable="true">
+            #{item}
+        </foreach>
+    </select>
+    <resultMap id="PostCountResultMap" type="com.moge10086.website.domain.model.PostCount">
+        <id property="postId" column="post_id"/>
+        <result property="readCount" column="read_count"/>
+        <result property="praiseCount" column="praise_count"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="commentCount" column="comment_count"/>
+    </resultMap>
+    <select id="getPostCount" resultMap="PostCountResultMap">
+        select post_id,read_count,praise_count,favorite_count,comment_count
+        from post_count
+        where post_id=#{postId}
+    </select>
+</mapper>

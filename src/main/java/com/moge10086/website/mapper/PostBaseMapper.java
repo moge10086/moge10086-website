@@ -1,13 +1,9 @@
 package com.moge10086.website.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moge10086.website.domain.dto.post.PostEditDTO;
 import com.moge10086.website.domain.model.PostBase;
-import com.moge10086.website.domain.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.BasePostEditVO;
-import com.moge10086.website.domain.vo.post.PostManageVO;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -62,12 +58,4 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
      * @return
      */
     BasePostEditVO getPostEditView(Long postId);
-
-    /**
-     * 获得用户帖子管理展示列表
-     * @param page
-     * @param queryPostManageListBO
-     * @return
-     */
-    IPage<PostManageVO> listPostManageViews(IPage<PostManageVO> page,@Param("queryBO") QueryPostManageListBO queryPostManageListBO);
 }

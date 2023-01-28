@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moge10086.website.mapper.PostQueryMapper">
+    <sql id="sortRuleSql">
+        <if test="query.postType!=null">
+            AND post_base.post_type=#{query.postType}
+        </if>
+        #判断帖子状态
+        <if test="query.postState!=null">
+            AND post_base.post_state=#{query.postState}
+        </if>
+        #判断作者ID
+        <if test="query.authorId!=null">
+            AND post_base.author_id=#{query.authorId}
+        </if>
+        #设置排序条件
+        <trim prefix="ORDER BY">
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@TIME.type">
+                post_base.update_time
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@PRAISE.type">
+                post_count.read_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@READ.type">
+                post_count.praise_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@FAVORITE.type">
+                post_count.favorite_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@COMMENT.type">
+                post_count.comment_count
+            </if>
+        </trim>
+        #设置排序顺序
+        <if test="query.sortOrder == true">
+            ASC
+        </if>
+        <if test="query.sortOrder == false">
+            DESC
+        </if>
+    </sql>
+    <select id="listPostIds" resultType="java.lang.Long">
+        SELECT post_base.post_id
+        FROM post_base INNER JOIN post_count
+        ON post_base.post_id=post_count.post_id
+       <include refid="sortRuleSql"/>
+    </select>
+    <select id="listBasePosts" resultType="com.moge10086.website.domain.vo.post.BasePostVO">
+        SELECT
+            post_base.post_id postId,
+            post_base.title title,
+            post_base.summary summary,
+            post_base.cover_img coverImg,
+            post_base.update_time updateTime,
+            post_base.post_type postType,
+            post_base.post_state postState,
+            post_count.read_count readCount,
+            post_count.praise_count praiseCount,
+            post_count.favorite_count favoriteCount,
+            post_count.comment_count commentCount
+        FROM post_base INNER JOIN post_count
+        ON post_base.post_id=post_count.post_id
+        <include refid="sortRuleSql"/>
+    </select>
+</mapper>
