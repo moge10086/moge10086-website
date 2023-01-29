@@ -2,12 +2,12 @@ package com.moge10086.website.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostArticleBO;
-import com.moge10086.website.domain.dto.PostQueryDTO;
 import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
 import com.moge10086.website.domain.model.PostArticle;
 import com.moge10086.website.domain.model.PostBase;
 import com.moge10086.website.domain.model.PostCount;
-import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.PostQueryDTO;
+import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
@@ -38,7 +38,7 @@ public class PostManageServiceImpl implements PostManageService {
     @Resource
     PostQueryMapper postQueryMapper;
     @Override
-    public Boolean validatePermissionByUserIdAndPostId(Long userId,Long postId) {
+    public Boolean validateOperatePermissionByUserIdAndPostId(Long userId, Long postId) {
         Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
         if (!userId.equals(authorId)){
             //帖子不存在或者authorId与userId不对应

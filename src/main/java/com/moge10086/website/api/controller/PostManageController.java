@@ -5,7 +5,7 @@ import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.jwt.JwtUtils;
 import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.bo.PostArticleBO;
-import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.service.PostManageService;
@@ -51,7 +51,7 @@ public class PostManageController {
             postId= postManageService.savePostArticle(userId,postArticleBO);
         }else{
             //编辑，判断该帖子能否被编辑：是否归属于该用户，状态是否可以编辑
-            if (!postManageService.validatePermissionByUserIdAndPostId(userId, postArticleBO.getPostId())){
+            if (!postManageService.validateOperatePermissionByUserIdAndPostId(userId, postArticleBO.getPostId())){
                 return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
             }
             postManageService.editPostArticle(userId,postArticleBO);
@@ -75,7 +75,7 @@ public class PostManageController {
             @RequestParam Long postId){
         Long userId=JwtUtils.getUserIdFromToken(token);
         //判断该帖子是否归属于该用户，状态是否可以被删除 todo：使用validateDeletePermissionByUserIdAndPostId
-        if (!postManageService.validatePermissionByUserIdAndPostId(userId, postId)){
+        if (!postManageService.validateOperatePermissionByUserIdAndPostId(userId, postId)){
             return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
         }
         //执行删除并返回结果
@@ -97,7 +97,7 @@ public class PostManageController {
             @RequestParam Long postId){
         Long userId=JwtUtils.getUserIdFromToken(token);
         //判断该帖子是否归属于该用户，状态是否可以被发布
-        if (!postManageService.validatePermissionByUserIdAndPostId(userId, postId)){
+        if (!postManageService.validateOperatePermissionByUserIdAndPostId(userId, postId)){
             return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
         }
         //发布并返回结果
@@ -118,7 +118,7 @@ public class PostManageController {
             @RequestParam Long postId){
         Long userId=JwtUtils.getUserIdFromToken(token);
         //判断该帖子是否归属于该用户，状态是否可以被撤销
-        if (!postManageService.validatePermissionByUserIdAndPostId(userId, postId)){
+        if (!postManageService.validateOperatePermissionByUserIdAndPostId(userId, postId)){
             return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
         }
         //发布并返回结果
@@ -140,7 +140,7 @@ public class PostManageController {
             @RequestParam Long postId){
         Long userId=JwtUtils.getUserIdFromToken(token);
         //判断该帖子是否归属于该用户，状态是否合法
-        if (!postManageService.validatePermissionByUserIdAndPostId(userId, postId)){
+        if (!postManageService.validateOperatePermissionByUserIdAndPostId(userId, postId)){
             return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
         }
         ArticleEditVO articleEditVO = postManageService.getArticleEditView(postId);

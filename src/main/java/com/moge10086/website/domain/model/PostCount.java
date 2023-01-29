@@ -1,9 +1,14 @@
 package com.moge10086.website.domain.model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 /**
  * @author 22872
  */
+@TableName("post_count")
 public class PostCount {
+    @TableId
     private Long postId ;
     /** 浏览量  */
     private Integer readCount ;

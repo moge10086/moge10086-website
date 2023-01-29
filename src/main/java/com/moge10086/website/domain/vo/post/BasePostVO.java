@@ -9,6 +9,8 @@ import java.util.Date;
 public class BasePostVO {
     /** 帖子ID */
     private Long postId ;
+    /** 作者ID */
+    private Long authorId ;
     /** 帖子标题 */
     private String title ;
     /** 简介 */
@@ -29,6 +31,14 @@ public class BasePostVO {
     private Integer favoriteCount ;
     /** 评论数 */
     private Integer commentCount ;
+
+    public Long getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
+    }
 
     public Integer getPostState() {
         return postState;
@@ -122,6 +132,7 @@ public class BasePostVO {
     public String toString() {
         return "BasePostVO{" +
                 "postId=" + postId +
+                ", authorId=" + authorId +
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
                 ", coverImg='" + coverImg + '\'' +

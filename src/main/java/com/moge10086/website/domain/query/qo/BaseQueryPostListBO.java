@@ -1,7 +1,6 @@
-package com.moge10086.website.domain.qo;
+package com.moge10086.website.domain.query.qo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.moge10086.website.enums.PostState;
 import com.moge10086.website.enums.PostType;
 import com.moge10086.website.enums.SortOrder;
 import com.moge10086.website.enums.SortType;
@@ -22,9 +21,6 @@ public class BaseQueryPostListBO {
     @Schema(description ="帖子类别",defaultValue = "0")
     @NotNull(message = "postType不能为空")
     private Integer postType;
-    @Schema(description ="帖子状态",defaultValue = "0")
-    @NotNull(message = "postState不能为空")
-    private Integer postState;
     @Schema(description ="排序类别:名称、创建时间、更新时间",defaultValue = "1")
     @NotNull(message = "sortType不能为空")
     private Integer sortType;
@@ -47,14 +43,21 @@ public class BaseQueryPostListBO {
     @JsonIgnore
     public Boolean isValid(){
         //传入的值不在枚举类中
-        if(!PostType.isInclude(postType)||!PostState.isInclude(postState)||!SortType.isInclude(sortType)||!SortOrder.isInclude(sortOrder)){
-            return false;
-        }
-        //已被删除的帖子不可查询
-        if (postState.equals(PostState.DELETE.type)){
+        if(!PostType.isInclude(postType)||!SortType.isInclude(sortType)||!SortOrder.isInclude(sortOrder)){
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "BaseQueryPostListBO{" +
+                "postType=" + postType +
+                ", sortType=" + sortType +
+                ", sortOrder=" + sortOrder +
+                ", pageSize=" + pageSize +
+                ", currentPage=" + currentPage +
+                '}';
     }
 
     public Integer getPostType() {
@@ -63,14 +66,6 @@ public class BaseQueryPostListBO {
 
     public void setPostType(Integer postType) {
         this.postType = postType;
-    }
-
-    public Integer getPostState() {
-        return postState;
-    }
-
-    public void setPostState(Integer postState) {
-        this.postState = postState;
     }
 
     public Integer getSortType() {
@@ -103,17 +98,5 @@ public class BaseQueryPostListBO {
 
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseQueryPostListBO{" +
-                "postType=" + postType +
-                ", postState=" + postState +
-                ", sortType=" + sortType +
-                ", sortOrder=" + sortOrder +
-                ", pageSize=" + pageSize +
-                ", currentPage=" + currentPage +
-                '}';
     }
 }

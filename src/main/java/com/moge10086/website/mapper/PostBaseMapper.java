@@ -43,7 +43,7 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
     void updatePostBase(PostEditDTO postEditDTO);
 
     /**
-     * 删除帖子（设置帖子状态为删除）
+     * 设置帖子状态
      * @param postId
      * @param postState
      * @param updateTime

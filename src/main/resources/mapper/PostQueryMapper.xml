@@ -5,15 +5,15 @@
         <if test="query.postType!=null">
             AND post_base.post_type=#{query.postType}
         </if>
-        #判断帖子状态
+        <!-- 判断帖子状态 -->
         <if test="query.postState!=null">
             AND post_base.post_state=#{query.postState}
         </if>
-        #判断作者ID
+        <!-- 判断作者ID -->
         <if test="query.authorId!=null">
             AND post_base.author_id=#{query.authorId}
         </if>
-        #设置排序条件
+        <!-- 设置排序条件 -->
         <trim prefix="ORDER BY">
             <if test="query.sortType == @com.moge10086.website.enums.SortType@TIME.type">
                 post_base.update_time
@@ -31,7 +31,7 @@
                 post_count.comment_count
             </if>
         </trim>
-        #设置排序顺序
+        <!-- 设置排序顺序 -->
         <if test="query.sortOrder == true">
             ASC
         </if>
@@ -48,6 +48,7 @@
     <select id="listBasePosts" resultType="com.moge10086.website.domain.vo.post.BasePostVO">
         SELECT
             post_base.post_id postId,
+            post_base.author_id authorId,
             post_base.title title,
             post_base.summary summary,
             post_base.cover_img coverImg,

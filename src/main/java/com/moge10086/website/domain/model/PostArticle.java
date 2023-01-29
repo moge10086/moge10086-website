@@ -1,5 +1,7 @@
 package com.moge10086.website.domain.model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.moge10086.website.domain.bo.PostArticleBO;
 
 import java.util.Date;
@@ -9,8 +11,10 @@ import java.util.Date;
  * @author : 邵权
  * @date : 2023-1-9
  */
+@TableName("post_article")
 public class PostArticle{
     /** 帖子ID */
+    @TableId
     private Long postId ;
     /** 创建时间 */
     private Date createTime ;

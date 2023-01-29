@@ -2,7 +2,7 @@ package com.moge10086.website.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostArticleBO;
-import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 
@@ -16,7 +16,7 @@ public interface PostManageService {
      * @param postId
      * @return Boolean
      */
-    Boolean validatePermissionByUserIdAndPostId(Long userId,Long postId);
+    Boolean validateOperatePermissionByUserIdAndPostId(Long userId, Long postId);
 
     /**
      * 将文章帖子保存到数据库,返回postId

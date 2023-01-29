@@ -1,5 +1,7 @@
 package com.moge10086.website.domain.model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.moge10086.website.domain.bo.PostBO;
 import com.moge10086.website.enums.PostState;
 
@@ -9,8 +11,10 @@ import java.util.Date;
  * @author : 邵权
  * @date : 2023-1-5
  */
+@TableName("post_base")
 public class PostBase{
     /** 帖子ID */
+    @TableId
     private Long postId ;
     /** 作者ID */
     private Long authorId ;

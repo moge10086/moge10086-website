@@ -7,7 +7,7 @@ package com.moge10086.website.enums;
 public enum SortOrder {
     //从高到低,从新到旧
     DESC(false, "降序"),
-    //从低到高,从新到旧
+    //从低到高,从旧到新
     ASC(true, "增序");
 
     public final Boolean type;

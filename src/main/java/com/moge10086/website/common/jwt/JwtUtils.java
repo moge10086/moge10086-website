@@ -1,10 +1,8 @@
 package com.moge10086.website.common.jwt;
 
 import com.moge10086.website.domain.vo.user.BaseUserVO;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.moge10086.website.enums.Role;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
@@ -64,22 +62,36 @@ public class JwtUtils {
         return Jwts.parserBuilder().setSigningKey(KEY).build().parseClaimsJws(jws).getBody();
     }
     /**
-     * 从token中获得用户id
+     * 从token中获得用户id,如果token无效则返回-1
      * @param token
      * @return userId
      */
     public static Long getUserIdFromToken(String token){
-        Claims claims = JwtUtils.parseJwsToClaims(token);
-        return Long.parseLong(claims.get("userId").toString());
+        if (token==null){
+            return -1L;
+        }
+        try {
+            Claims claims = JwtUtils.parseJwsToClaims(token);
+            return Long.parseLong(claims.get("userId").toString());
+        } catch (JwtException jwtException) {
+            return -1L;
+        }
     }
 
     /**
-     * 从token中获得用户role
+     * 从token中获得用户role,无效则返回游客
      * @param token
      * @return userId
      */
     public static Integer getRoleFromToken(String token){
-        Claims claims = JwtUtils.parseJwsToClaims(token);
-        return (Integer)claims.get("role");
+        if (token==null){
+            return -1;
+        }
+        try {
+            Claims claims = JwtUtils.parseJwsToClaims(token);
+            return Integer.parseInt(claims.get("role").toString());
+        }catch (JwtException jwtException){
+            return Role.TOURIST.type;
+        }
     }
 }

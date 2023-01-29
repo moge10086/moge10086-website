@@ -1,12 +1,17 @@
 package com.moge10086.website.domain.model;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.util.Date;
 
 /**
  * @author 22872
  */
+@TableName("post_praise")
 public class PostPraise {
     /** 帖子点赞ID */
+    @TableId
     private Long postPraiseId ;
     /** 帖子ID */
     private Long postId ;

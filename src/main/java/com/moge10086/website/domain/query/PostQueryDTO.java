@@ -1,6 +1,8 @@
-package com.moge10086.website.domain.dto;
+package com.moge10086.website.domain.query;
 
-import com.moge10086.website.domain.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.qo.QueryPostCardListBO;
+import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
+import com.moge10086.website.enums.PostState;
 import com.moge10086.website.enums.SortOrder;
 import com.moge10086.website.enums.SortType;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +38,13 @@ public class PostQueryDTO {
                 sortOrder==null?SortOrder.DESC.type:sortOrder,
                 authorId
         );
+    }
+    public static PostQueryDTO generateQuery(QueryPostCardListBO queryPostCardListBO){
+        PostQueryDTO queryDTO=new PostQueryDTO();
+        BeanUtils.copyProperties(queryPostCardListBO,queryDTO);
+        //只能查询被展示的帖子
+        queryDTO.setPostState(PostState.SHOW.type);
+        return queryDTO;
     }
     public static PostQueryDTO generateQuery(QueryPostManageListBO queryPostManageListBO){
         PostQueryDTO queryDTO=new PostQueryDTO();
