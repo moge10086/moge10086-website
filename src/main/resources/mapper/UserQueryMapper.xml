@@ -9,12 +9,12 @@
         avatar_img as avatarImg,
         role as role
         from user_info
-        where user_id in
-        <!-- 加入-1是为了有物可查,否则传入为空将会sql错误 -->
-        (-1
+        <if test="userIds.size() == 0">
+            where false
+        </if>
          <foreach collection="userIds" item="item" index="index"
-                 open="," separator="," close="" nullable="true">
+                open="where user_id in (" separator="," close=")" nullable="true">
             #{item}
-        </foreach>)
+        </foreach>
     </select>
 </mapper>

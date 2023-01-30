@@ -1,5 +1,6 @@
 package com.moge10086.website.domain.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
@@ -11,7 +12,7 @@ import java.util.Date;
 @TableName("post_praise")
 public class PostPraise {
     /** 帖子点赞ID */
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Long postPraiseId ;
     /** 帖子ID */
     private Long postId ;
@@ -23,6 +24,21 @@ public class PostPraise {
     private Date updateTime ;
     /** 点赞状态 */
     private Integer praiseState ;
+
+    public PostPraise() {
+    }
+    public static PostPraise initPostPraise(Long postId, Long userId){
+        Date now=new Date();
+        return new PostPraise(null,postId,userId,now,now,1);
+    }
+    public PostPraise(Long postPraiseId, Long postId, Long userId, Date createTime, Date updateTime, Integer praiseState) {
+        this.postPraiseId = postPraiseId;
+        this.postId = postId;
+        this.userId = userId;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.praiseState = praiseState;
+    }
 
     public Long getPostPraiseId() {
         return postPraiseId;

@@ -9,9 +9,11 @@
                favorite_count as favoriteCount,
                comment_count as commentCount
         from post_count
-        where post_id in
+        <if test="postIds.size() == 0">
+            where false
+        </if>
         <foreach collection="postIds" item="item" index="index"
-                 open="(" separator="," close=")" nullable="true">
+            open=" where post_id in (" separator="," close=")" nullable="true">
             #{item}
         </foreach>
     </select>

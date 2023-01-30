@@ -69,4 +69,13 @@ public interface PostManageService {
      * @return
      */
     Page<BasePostVO> getManagePostList(QueryPostManageListBO queryPostManageListBO);
+
+    /**
+     * 点赞帖子
+     *
+     * @param userId
+     * @param postId
+     * @return
+     */
+    Boolean praisePost(Long userId, Long postId);
 }

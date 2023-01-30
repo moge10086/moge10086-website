@@ -9,6 +9,7 @@ import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.service.PostManageService;
+import com.moge10086.website.service.PostShowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,8 @@ import javax.validation.Valid;
 public class PostManageController {
     @Resource
     PostManageService postManageService;
+    @Resource
+    PostShowService postShowService;
     /**
      * @description 上传文章进行保存/编辑,如果成功则返回用户信息
      * @return JsonResult<Long>
@@ -166,6 +169,19 @@ public class PostManageController {
     /**
      * 点赞
      */
+    @Operation(summary = "用户点赞对应帖子", description = "用户点赞对应帖子,返回点赞状态")
+    @GetMapping(value = "/praisePost",consumes = {"application/x-www-form-urlencoded; charset=UTF-8"})
+    public JsonResult<Boolean> getManagePostList(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "帖子ID", required = true)
+            @RequestParam Long postId){
+        Long userId=JwtUtils.getUserIdFromToken(token);
+        if (!postShowService.validateShowPermissionByUserIdAndPostId(userId,postId)){
+            return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
+        }
+        return JsonResult.ok(postManageService.praisePost(userId,postId));
+    }
     /**
      * 收藏
      */

@@ -6,6 +6,7 @@ import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
 import com.moge10086.website.domain.model.PostArticle;
 import com.moge10086.website.domain.model.PostBase;
 import com.moge10086.website.domain.model.PostCount;
+import com.moge10086.website.domain.model.PostPraise;
 import com.moge10086.website.domain.query.PostQueryDTO;
 import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
@@ -13,10 +14,7 @@ import com.moge10086.website.domain.vo.post.BasePostEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.enums.PostState;
 import com.moge10086.website.enums.PostType;
-import com.moge10086.website.mapper.PostArticleMapper;
-import com.moge10086.website.mapper.PostBaseMapper;
-import com.moge10086.website.mapper.PostCountMapper;
-import com.moge10086.website.mapper.PostQueryMapper;
+import com.moge10086.website.mapper.*;
 import com.moge10086.website.service.PostManageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +35,8 @@ public class PostManageServiceImpl implements PostManageService {
     PostCountMapper postCountMapper;
     @Resource
     PostQueryMapper postQueryMapper;
+    @Resource
+    PostPraiseMapper postPraiseMapper;
     @Override
     public Boolean validateOperatePermissionByUserIdAndPostId(Long userId, Long postId) {
         Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
@@ -52,7 +52,7 @@ public class PostManageServiceImpl implements PostManageService {
     @Override
     @Transactional
     public Long savePostArticle(Long authorId,PostArticleBO postArticleBO) {
-        /* todo
+        /*
          * 同时生成post_base,post_count,post_article
          * 注意事务
          */
@@ -110,6 +110,30 @@ public class PostManageServiceImpl implements PostManageService {
         Page<BasePostVO> basePostPage=Page.of(queryPostManageListBO.getCurrentPage(),queryPostManageListBO.getPageSize());
         postQueryMapper.listBasePosts(basePostPage,PostQueryDTO.generateQuery(queryPostManageListBO));
         return basePostPage;
+    }
+
+    @Override
+    @Transactional
+    public Boolean praisePost(Long userId, Long postId) {
+        //查询点赞记录
+        Integer originalPraiseState=postPraiseMapper.getPraiseState(userId,postId);
+        //todo 多线程下会不会同时插入两条 注意唯一索引
+        if (originalPraiseState==null){
+            //插入点赞记录，第一次都是点赞状态
+            postPraiseMapper.insert(PostPraise.initPostPraise(postId,userId));
+            postCountMapper.praiseCountPlusOne(postId);
+        }else{
+            //如果之前是点赞状态（1、true），则更新为取消状态（0、false）
+            boolean praiseState=originalPraiseState==0;
+            postPraiseMapper.updatePraiseState(userId,postId,praiseState?1:0,new Date());
+            if (praiseState){
+                postCountMapper.praiseCountPlusOne(postId);
+            }else{
+                postCountMapper.praiseCountMinusOne(postId);
+            }
+            return praiseState;
+        }
+        return true;
     }
 
 }
