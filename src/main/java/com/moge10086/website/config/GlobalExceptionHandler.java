@@ -32,11 +32,11 @@ public class GlobalExceptionHandler {
      * @return
      * @throws IOException
      */
-//    @ExceptionHandler(Exception.class)
-//    public JsonResult<String> handleException(HttpServletResponse resp, Exception ex) throws IOException {
-//        String result = ex.getMessage();
-//        return JsonResult.errorMsg(StatusCode.UNKNOWN_ERROR,"未知的错误:"+result);
-//    }
+    @ExceptionHandler(Exception.class)
+    public JsonResult<String> handleException(HttpServletResponse resp, Exception ex) throws IOException {
+        String result = ex.getMessage();
+        return JsonResult.errorMsg(StatusCode.UNKNOWN_ERROR,"未知的错误:"+result);
+    }
 
     /**
      * JWT解析异常：无效、过期

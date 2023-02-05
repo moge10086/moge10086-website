@@ -21,7 +21,6 @@ public class AliyunUtils {
     private static String  roleArn;
     private static String roleSessionName = "SessionTest";
     public static AssumeRoleResponse getUserUploadImageToken() {
-        System.out.println(accessKeyId);
         try {
             // regionId表示RAM的地域ID。以华东1（杭州）地域为例，regionID填写为cn-hangzhou。也可以保留默认值，默认值为空字符串（""）。
             String regionId = "";
@@ -38,17 +37,17 @@ public class AliyunUtils {
 //            request.setPolicy();
             request.setDurationSeconds(3600L);
             final AssumeRoleResponse response = client.getAcsResponse(request);
-            System.out.println("Expiration: " + response.getCredentials().getExpiration());
-            System.out.println("Access Key Id: " + response.getCredentials().getAccessKeyId());
-            System.out.println("Access Key Secret: " + response.getCredentials().getAccessKeySecret());
-            System.out.println("Security Token: " + response.getCredentials().getSecurityToken());
-            System.out.println("RequestId: " + response.getRequestId());
+//            System.out.println("Expiration: " + response.getCredentials().getExpiration());
+//            System.out.println("Access Key Id: " + response.getCredentials().getAccessKeyId());
+//            System.out.println("Access Key Secret: " + response.getCredentials().getAccessKeySecret());
+//            System.out.println("Security Token: " + response.getCredentials().getSecurityToken());
+//            System.out.println("RequestId: " + response.getRequestId());
             return response;
         } catch (ClientException e) {
-            System.out.println("Failed：");
-            System.out.println("Error code: " + e.getErrCode());
-            System.out.println("Error message: " + e.getErrMsg());
-            System.out.println("RequestId: " + e.getRequestId());
+//            System.out.println("Failed：");
+//            System.out.println("Error code: " + e.getErrCode());
+//            System.out.println("Error message: " + e.getErrMsg());
+//            System.out.println("RequestId: " + e.getRequestId());
         }
         return null;
     }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author 22872
@@ -53,7 +54,7 @@ public class PostShowController {
     @GetMapping(value = "/getArticle", consumes = {MediaType.ALL_VALUE})
     public JsonResult<ArticleShowVO> getArticle(
             @Parameter(description = "token")
-            @RequestHeader(value = "Authorization",required = false) String token,
+            @RequestHeader(value = "Authorization",required = false) @NotBlank String token,
             @Parameter(description = "帖子ID", required = true)
             @RequestParam Long postId){
         /*  验证帖子状态是否合法(是否存在，状态可以访问)

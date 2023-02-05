@@ -15,11 +15,26 @@
     <description>website</description>
     <properties>
         <java.version>17</java.version>
+        <skipTests>true</skipTests>
     </properties>
+    <!-- 打包war [1] -->
+    <packaging>war</packaging>
     <dependencies>
+        <!--打war包时排除内置的tomcat-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- 打包war 添加依赖 -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -128,6 +143,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+        <finalName>website-api-beta</finalName>
     </build>
 
 </project>
