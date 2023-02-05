@@ -13,6 +13,7 @@ import com.moge10086.website.service.PostShowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,26 @@ public class PostManageController {
         //返回id
         return JsonResult.ok(postId);
     }
-
+    /**
+     * 保存、编辑、发布帖子
+     * @param token
+     * @param postArticleBO
+     * @return
+     */
+    @Operation(summary = "保存、编辑、发布帖子", description = "保存、编辑、发布帖子。无id则为保存，返回帖子id")
+    @PostMapping(value = "/saveOrEditAndPublicArticlePost",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Long> saveOrEditAndPublicArticlePost(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "文章帖子内容", required = true)
+            @Valid @RequestBody PostArticleBO postArticleBO){
+        /* 先保存/编辑,发布帖子*/
+        Long postId = saveOrEditArticle(token, postArticleBO).getData();
+        //发布帖子
+        publishPost(token,postId);
+        //返回id
+        return JsonResult.ok(postId);
+    }
     /**
      * 删除帖子
      * @param token
@@ -170,7 +190,7 @@ public class PostManageController {
      * 点赞
      */
     @Operation(summary = "用户点赞对应帖子", description = "用户点赞对应帖子,返回点赞状态")
-    @GetMapping(value = "/praisePost",consumes = {"application/x-www-form-urlencoded; charset=UTF-8"})
+    @GetMapping(value = "/praisePost", consumes = {MediaType.ALL_VALUE})
     public JsonResult<Boolean> getManagePostList(
             @Parameter(description = "token", required = true)
             @RequestHeader("Authorization") String token,
