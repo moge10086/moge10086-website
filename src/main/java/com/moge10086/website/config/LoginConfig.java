@@ -19,6 +19,7 @@ public class LoginConfig implements WebMvcConfigurer {
         //要拦截的路径
         registration.addPathPatterns("/postManage/**")
                     .addPathPatterns("/userManage/**")
-                    .addPathPatterns("/aliyun/**");
+                    .addPathPatterns("/aliyun/**")
+                    .addPathPatterns("/postComment/*");
     }
 }

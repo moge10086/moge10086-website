@@ -42,4 +42,17 @@ public class UserManageController {
         userInfoService.updateUserInfo(userInfoModifyBO);
         return JsonResult.ok(userInfoService.getBaseUserVO(userId));
     }
+    /**
+     * 返回用户基本信息
+     * @param token
+     * @return
+     */
+    @Operation(summary = "获得用户基本信息", description = "更新用户基本信息,返回基本信息")
+    @GetMapping(value = "/getUserInfo")
+    public JsonResult<BaseUserVO> updateUserInfo(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token){
+        Long userId= JwtUtils.getUserIdFromToken(token);
+        return JsonResult.ok(userInfoService.getBaseUserVO(userId));
+    }
 }

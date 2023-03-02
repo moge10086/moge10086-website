@@ -27,6 +27,10 @@ public class StatusCode {
      */
     static public int ERROR_POST=221;
     /**
+     * 非法的CommentID
+     */
+    static public int ERROR_COMMENT=231;
+    /**
      * token失效或过期
      */
     static public int ERROR_TOKEN=311;

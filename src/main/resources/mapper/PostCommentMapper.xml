@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.moge10086.website.mapper.PostCommentMapper">
+    <insert id="insertRootComment" parameterType="com.moge10086.website.mapper.PostCommentMapper" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO post_comment (post_id, user_id, create_time, update_time,comment_content, comment_state)
+        VALUES(#{postId},#{userId},#{createTime},#{updateTime},#{commentContent},#{commentState});
+    </insert>
+    <insert id="insertReplyComment" parameterType="com.moge10086.website.mapper.PostCommentMapper" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO post_comment (root_comment_id, replied_comment_id, post_id, user_id, create_time, update_time,
+                                  comment_content, comment_state)
+        VALUES(#{rootCommentId},#{repliedCommentId},#{postId},#{userId},#{createTime},#{updateTime},#{commentContent},#{commentState});
+    </insert>
+    <select id="getPostCommentByCommentId" resultMap="PostCommentVO">
+        SELECT
+            post_comment.comment_id as comment_id,
+            post_comment.post_id as post_id,
+            post_comment.comment_content as comment_content,
+            post_comment.root_comment_id as root_comment_id,
+            post_comment.replied_comment_id as replied_comment_id,
+            post_comment.update_time as update_time,
+            post_comment.comment_state as comment_state,
+            replied_post_comment.comment_content as replied_comment_content,
+            replied_post_comment.comment_state as replied_comment_state,
+            send_user.user_id as user_id,
+            send_user.user_name as user_name,
+            send_user.sign as sign,
+            send_user.avatar_img as avatar_img,
+            send_user.role as role,
+            replied_user.user_id as replied_user_id,
+            replied_user.user_name as replied_user_name
+        FROM
+            post_comment AS post_comment,
+            post_comment AS replied_post_comment,
+            user_info AS send_user,
+            user_info AS replied_user
+        WHERE
+            post_comment.comment_id = #{commentId} AND
+            replied_post_comment.comment_id = post_comment.replied_comment_id AND
+            send_user.user_id = post_comment.user_id AND
+            replied_user.user_id = replied_post_comment.user_id AND
+            post_comment.comment_state = 1
+    </select>
+    <resultMap id="PostCommentVO" type="com.moge10086.website.domain.vo.comment.PostCommentVO">
+        <id column="comment_id" />
+        <association property="sendUserVO"
+                     resultMap="SendUserVO" />
+        <association property="sendCommentVO"
+                     resultMap="SendCommentVO" />
+        <association property="repliedUserVO"
+                     resultMap="RepliedUserVO" />
+        <association property="repliedCommentVO"
+                     resultMap="RepliedCommentVO" />
+    </resultMap>
+    <resultMap id="SendUserVO" type="com.moge10086.website.domain.vo.comment.SendUserVO">
+        <id property="userId" column="user_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="sign" column="sign"/>
+        <result property="avatarImg" column="avatar_img"/>
+        <result property="role" column="role"/>
+    </resultMap>
+    <resultMap id="SendCommentVO" type="com.moge10086.website.domain.vo.comment.SendCommentVO">
+        <id property="commentId" column="comment_id"/>
+        <result property="rootCommentId" column="root_comment_id"/>
+        <result property="repliedCommentId" column="replied_comment_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="commentContent" column="comment_content"/>
+        <result property="commentState" column="comment_state"/>
+    </resultMap>
+    <resultMap id="RepliedUserVO" type="com.moge10086.website.domain.vo.comment.RepliedUserVO">
+        <id property="userId" column="replied_user_id"/>
+        <result property="userName" column="replied_user_name"/>
+    </resultMap>
+    <resultMap id="RepliedCommentVO" type="com.moge10086.website.domain.vo.comment.RepliedCommentVO">
+        <id property="commentId" column="replied_comment_id"/>
+        <result property="commentContent" column="replied_comment_content"/>
+        <result property="commentState" column="replied_comment_state"/>
+    </resultMap>
+</mapper>
