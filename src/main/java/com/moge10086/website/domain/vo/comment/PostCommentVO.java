@@ -1,5 +1,7 @@
 package com.moge10086.website.domain.vo.comment;
 
+import com.moge10086.website.enums.CommentState;
+
 /**
  * @author 22872
  */
@@ -8,7 +10,11 @@ public class PostCommentVO {
     SendCommentVO sendCommentVO;
     RepliedUserVO repliedUserVO;
     RepliedCommentVO repliedCommentVO;
-
+    public void validateRepliedCommentByStatus(){
+        if(!this.repliedCommentVO.getCommentState().equals(CommentState.SHOW.type)) {
+            this.repliedCommentVO.setCommentContent("该评论已被删除");
+        }
+    }
     public SendUserVO getSendUserVO() {
         return sendUserVO;
     }

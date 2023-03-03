@@ -1,8 +1,10 @@
 package com.moge10086.website.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moge10086.website.domain.model.PostComment;
 import com.moge10086.website.domain.vo.comment.PostCommentVO;
+import com.moge10086.website.domain.vo.comment.RootPostCommentVO;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -16,6 +18,21 @@ public interface PostCommentMapper extends BaseMapper<PostComment> {
      * @return
      */
     PostCommentVO getPostCommentByCommentId(Long commentId);
+
+    /**
+     * 获得根评论列表
+     * @param page
+     * @param postId
+     * @return
+     */
+    IPage<RootPostCommentVO> listRootPostComments(IPage<RootPostCommentVO> page, Long postId);
+    /**
+     * 获得子评论列表
+     * @param page
+     * @param commentId
+     * @return
+     */
+    IPage<PostCommentVO> listChildrenPostComments(IPage<PostCommentVO> page, Long commentId);
     /**
      * 插入根评论
      * @param postComment

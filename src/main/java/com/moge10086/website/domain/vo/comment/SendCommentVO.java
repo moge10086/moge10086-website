@@ -4,17 +4,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.Date;
 
+/**
+ * @author 22872
+ */
 public class SendCommentVO {
     @Schema(description = "评论ID")
     private Long commentId;
     @Schema(description = "根评论ID")
     private Long rootCommentId;
-    @Schema(description = "被回复评论ID")
-    private Long repliedCommentId;
     @Schema(description = "帖子ID")
     private Long postId;
-    @Schema(description = "发表用户ID")
-    private Long userId;
     @Schema(description = "发表时间")
     private Date updateTime;
     @Schema(description = "评论内容")
@@ -38,28 +37,12 @@ public class SendCommentVO {
         this.rootCommentId = rootCommentId;
     }
 
-    public Long getRepliedCommentId() {
-        return repliedCommentId;
-    }
-
-    public void setRepliedCommentId(Long repliedCommentId) {
-        this.repliedCommentId = repliedCommentId;
-    }
-
     public Long getPostId() {
         return postId;
     }
 
     public void setPostId(Long postId) {
         this.postId = postId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Date getUpdateTime() {
@@ -91,9 +74,7 @@ public class SendCommentVO {
         return "SendCommentVO{" +
                 "commentId=" + commentId +
                 ", rootCommentId=" + rootCommentId +
-                ", repliedCommentId=" + repliedCommentId +
                 ", postId=" + postId +
-                ", userId=" + userId +
                 ", updateTime=" + updateTime +
                 ", commentContent='" + commentContent + '\'' +
                 ", commentState=" + commentState +

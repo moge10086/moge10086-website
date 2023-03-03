@@ -1,16 +1,19 @@
 package com.moge10086.website.api.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.jwt.JwtUtils;
 import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.bo.PostCommentBO;
+import com.moge10086.website.domain.query.qo.QueryCommentReplyListBO;
+import com.moge10086.website.domain.query.qo.QueryPostCommentListBO;
 import com.moge10086.website.domain.vo.comment.PostCommentVO;
+import com.moge10086.website.domain.vo.comment.RootPostCommentVO;
 import com.moge10086.website.service.PostCommentService;
 import com.moge10086.website.service.PostShowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,17 +62,23 @@ public class PostCommentController {
         return JsonResult.ok(postCommentVO);
     }
     @Operation(summary = "获得帖子展示评论", description = "获得帖子评论")
-    @GetMapping(value = "/getPostComments", consumes = {MediaType.ALL_VALUE})
-    public JsonResult<String> getPostComments(
+    @PostMapping(value = "/getPostComments",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Page<RootPostCommentVO>> getPostComments(
             @Parameter(description = "token")
-            @RequestHeader(value = "Authorization",required = false) String token){
-        return JsonResult.ok(null);
+            @RequestHeader(value = "Authorization",required = false) String token,
+            @Parameter(description = "帖子评论查询体", required = true)
+            @Valid @RequestBody QueryPostCommentListBO queryPostCommentListBO){
+        Page<RootPostCommentVO> rootPostCommentPage = postCommentService.listRootPostComment(queryPostCommentListBO);
+        return JsonResult.ok(rootPostCommentPage);
     }
-    @Operation(summary = "获得评论回复", description = "获得评论回复")
-    @GetMapping(value = "/getPostReplies", consumes = {MediaType.ALL_VALUE})
-    public JsonResult<String> getPostReplies(
+    @Operation(summary = "获得评论回复列表（子评论）", description = "获得评论回复列表（子评论）")
+    @PostMapping(value = "/getCommentReplies",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Page<PostCommentVO>> getCommentReplies(
             @Parameter(description = "token")
-            @RequestHeader(value = "Authorization",required = false) String token){
-        return JsonResult.ok(null);
+            @RequestHeader(value = "Authorization",required = false) String token,
+            @Parameter(description = "子评论查询体", required = true)
+            @Valid @RequestBody QueryCommentReplyListBO queryCommentReplyListBO){
+        Page<PostCommentVO> postCommentReplyPage = postCommentService.listPostCommentReply(queryCommentReplyListBO);
+        return JsonResult.ok(postCommentReplyPage);
     }
 }

@@ -16,9 +16,9 @@
             post_comment.post_id as post_id,
             post_comment.comment_content as comment_content,
             post_comment.root_comment_id as root_comment_id,
-            post_comment.replied_comment_id as replied_comment_id,
             post_comment.update_time as update_time,
             post_comment.comment_state as comment_state,
+            replied_post_comment.comment_id as replied_comment_id,
             replied_post_comment.comment_content as replied_comment_content,
             replied_post_comment.comment_state as replied_comment_state,
             send_user.user_id as user_id,
@@ -40,6 +40,68 @@
             replied_user.user_id = replied_post_comment.user_id AND
             post_comment.comment_state = 1
     </select>
+    <select id="listRootPostComments" resultMap="RootPostCommentVO">
+        SELECT
+            post_comment.comment_id as comment_id,
+            post_comment.post_id as post_id,
+            post_comment.comment_content as comment_content,
+            post_comment.root_comment_id as root_comment_id,
+            post_comment.update_time as update_time,
+            post_comment.comment_state as comment_state,
+            send_user.user_id as user_id,
+            send_user.user_name as user_name,
+            send_user.sign as sign,
+            send_user.avatar_img as avatar_img,
+            send_user.role as role
+        FROM
+            post_comment AS post_comment,
+            user_info AS send_user
+        WHERE
+            post_comment.post_id = #{postId} AND
+            post_comment.root_comment_id=post_comment.comment_id AND
+            send_user.user_id = post_comment.user_id AND
+            post_comment.comment_state = 1
+        ORDER BY post_comment.update_time DESC
+    </select>
+    <select id="listChildrenPostComments" resultMap="PostCommentVO">
+        SELECT
+            post_comment.comment_id as comment_id,
+            post_comment.post_id as post_id,
+            post_comment.comment_content as comment_content,
+            post_comment.root_comment_id as root_comment_id,
+            post_comment.update_time as update_time,
+            post_comment.comment_state as comment_state,
+            replied_post_comment.comment_id as replied_comment_id,
+            replied_post_comment.comment_content as replied_comment_content,
+            replied_post_comment.comment_state as replied_comment_state,
+            send_user.user_id as user_id,
+            send_user.user_name as user_name,
+            send_user.sign as sign,
+            send_user.avatar_img as avatar_img,
+            send_user.role as role,
+            replied_user.user_id as replied_user_id,
+            replied_user.user_name as replied_user_name
+        FROM
+            post_comment AS post_comment,
+            post_comment AS replied_post_comment,
+            user_info AS send_user,
+            user_info AS replied_user
+        WHERE
+            post_comment.root_comment_id = #{commentId} AND
+            post_comment.comment_id != #{commentId} AND
+            replied_post_comment.comment_id = post_comment.replied_comment_id AND
+            send_user.user_id = post_comment.user_id AND
+            replied_user.user_id = replied_post_comment.user_id AND
+            post_comment.comment_state = 1
+        ORDER BY post_comment.update_time DESC
+    </select>
+    <resultMap id="RootPostCommentVO" type="com.moge10086.website.domain.vo.comment.RootPostCommentVO">
+        <id column="comment_id" />
+        <association property="sendUserVO"
+                     resultMap="SendUserVO" />
+        <association property="sendCommentVO"
+                     resultMap="SendCommentVO" />
+    </resultMap>
     <resultMap id="PostCommentVO" type="com.moge10086.website.domain.vo.comment.PostCommentVO">
         <id column="comment_id" />
         <association property="sendUserVO"
@@ -61,9 +123,7 @@
     <resultMap id="SendCommentVO" type="com.moge10086.website.domain.vo.comment.SendCommentVO">
         <id property="commentId" column="comment_id"/>
         <result property="rootCommentId" column="root_comment_id"/>
-        <result property="repliedCommentId" column="replied_comment_id"/>
         <result property="postId" column="post_id"/>
-        <result property="userId" column="user_id"/>
         <result property="updateTime" column="update_time"/>
         <result property="commentContent" column="comment_content"/>
         <result property="commentState" column="comment_state"/>

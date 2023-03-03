@@ -14,10 +14,6 @@ import javax.validation.constraints.NotNull;
  * @author 22872
  */
 public class BaseQueryPostListBO {
-    /**
-     * 分页返回上限
-     */
-    public static final Integer PAGE_SIZE_LIMIT =60;
     @Schema(description ="帖子类别",defaultValue = "0")
     @NotNull(message = "postType不能为空")
     private Integer postType;

@@ -20,6 +20,6 @@ public class LoginConfig implements WebMvcConfigurer {
         registration.addPathPatterns("/postManage/**")
                     .addPathPatterns("/userManage/**")
                     .addPathPatterns("/aliyun/**")
-                    .addPathPatterns("/postComment/*");
+                    .addPathPatterns("/postComment/publishComment");
     }
 }

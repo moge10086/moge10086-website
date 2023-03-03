@@ -1,8 +1,12 @@
 package com.moge10086.website.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostCommentBO;
 import com.moge10086.website.domain.model.PostComment;
+import com.moge10086.website.domain.query.qo.QueryCommentReplyListBO;
+import com.moge10086.website.domain.query.qo.QueryPostCommentListBO;
 import com.moge10086.website.domain.vo.comment.PostCommentVO;
+import com.moge10086.website.domain.vo.comment.RootPostCommentVO;
 import com.moge10086.website.enums.CommentState;
 import com.moge10086.website.mapper.PostCommentMapper;
 import com.moge10086.website.service.PostCommentService;
@@ -20,6 +24,28 @@ import java.util.Objects;
 public class PostCommentServiceImpl implements PostCommentService {
     @Resource
     PostCommentMapper postCommentMapper;
+
+    @Override
+    public Page<RootPostCommentVO> listRootPostComment(QueryPostCommentListBO qo) {
+        //先查询根评论
+        Page<RootPostCommentVO> rootPostCommentPage=Page.of(qo.getCurrentPage(), qo.getPageSize());
+        postCommentMapper.listRootPostComments(rootPostCommentPage,qo.getPostId());
+        //查询每条根评论下的回复(查询每个根评论id对应的前5条回复)
+        rootPostCommentPage.getRecords().
+                forEach(a->{
+                    Page<PostCommentVO> childrenPostCommentPage=Page.of(1, 5);
+                    a.setChildrenPostCommentList((Page<PostCommentVO>) postCommentMapper.listChildrenPostComments(childrenPostCommentPage,a.getSendCommentVO().getCommentId()));
+                    a.getChildrenPostCommentList().getRecords().forEach(PostCommentVO::validateRepliedCommentByStatus);
+                });
+        return rootPostCommentPage;
+    }
+    @Override
+    public Page<PostCommentVO> listPostCommentReply(QueryCommentReplyListBO qo) {
+        Page<PostCommentVO> childrenPostCommentPage=Page.of(qo.getCurrentPage(), qo.getPageSize());
+        postCommentMapper.listChildrenPostComments(childrenPostCommentPage,qo.getCommentId());
+        childrenPostCommentPage.getRecords().forEach(PostCommentVO::validateRepliedCommentByStatus);
+        return childrenPostCommentPage;
+    }
 
     @Override
     public PostCommentVO getPostCommentByCommentId(Long commentId) {
@@ -45,7 +71,7 @@ public class PostCommentServiceImpl implements PostCommentService {
             postCommentBO.setPostId(postCommentMapper.getPostIdByCommentId(postCommentBO.getRepliedCommentId()));
             Long rootCommentId=postCommentMapper.getRootCommentIdByCommentId(postCommentBO.getRepliedCommentId());
             PostComment replyComment=PostComment.initReplyComment(rootCommentId,postCommentBO);
-            postCommentMapper.insertRootComment(replyComment);
+            postCommentMapper.insertReplyComment(replyComment);
             return replyComment.getCommentId();
         }
     }
