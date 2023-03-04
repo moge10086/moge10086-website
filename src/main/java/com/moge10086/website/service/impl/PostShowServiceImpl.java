@@ -39,6 +39,8 @@ public class PostShowServiceImpl implements PostShowService {
     UserInfoMapper userInfoMapper;
     @Resource
     PostPraiseMapper postPraiseMapper;
+    @Resource
+    PostFavoriteMapper postFavoriteMapper;
 
     @Override
     public Boolean validateShowPermissionByUserIdAndPostId(Long userId, Long postId) {
@@ -47,7 +49,7 @@ public class PostShowServiceImpl implements PostShowService {
         if (postState!=null&&postState.equals(PostState.SHOW.type)){
             return true;
         }
-//        //用户是是作者，且不为删除状态
+//        //用户是是作者，则不为删除状态
 //        Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
 //        if (postState!=null&&userId.equals(authorId)&&!postState.equals(PostState.DELETE.type)){
 //            return true;
@@ -87,6 +89,9 @@ public class PostShowServiceImpl implements PostShowService {
         BaseUserVO baseUserVO = userInfoMapper.getUserVO(postBase.getAuthorId());
         //获得点赞信息,post_praise,可能为null
         Integer praiseState = postPraiseMapper.getPraiseState(userId, postId);
-        return new PostShowVO(basePostVO,baseUserVO,praiseState,null);
+        Integer favoriteState = postFavoriteMapper.getFavoriteState(userId, postId);
+        //浏览量+1
+        postCountMapper.readCountPlusOne(postId);
+        return new PostShowVO(basePostVO,baseUserVO,praiseState,favoriteState);
     }
 }

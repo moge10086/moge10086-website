@@ -9,6 +9,7 @@ import com.moge10086.website.domain.vo.comment.PostCommentVO;
 import com.moge10086.website.domain.vo.comment.RootPostCommentVO;
 import com.moge10086.website.enums.CommentState;
 import com.moge10086.website.mapper.PostCommentMapper;
+import com.moge10086.website.mapper.PostCountMapper;
 import com.moge10086.website.service.PostCommentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -24,6 +25,8 @@ import java.util.Objects;
 public class PostCommentServiceImpl implements PostCommentService {
     @Resource
     PostCommentMapper postCommentMapper;
+    @Resource
+    PostCountMapper postCountMapper;
 
     @Override
     public Page<RootPostCommentVO> listRootPostComment(QueryPostCommentListBO qo) {
@@ -64,6 +67,8 @@ public class PostCommentServiceImpl implements PostCommentService {
             PostComment rootComment=PostComment.initRootComment(postCommentBO);
             postCommentMapper.insertRootComment(rootComment);
             postCommentMapper.updateRootAndReplied(rootComment.getCommentId());
+            //评论数+1
+            postCountMapper.commentCountPlusOne(postCommentBO.getPostId());
             return rootComment.getCommentId();
         }else{
             //发表回复
@@ -72,6 +77,8 @@ public class PostCommentServiceImpl implements PostCommentService {
             Long rootCommentId=postCommentMapper.getRootCommentIdByCommentId(postCommentBO.getRepliedCommentId());
             PostComment replyComment=PostComment.initReplyComment(rootCommentId,postCommentBO);
             postCommentMapper.insertReplyComment(replyComment);
+            //评论数+1
+            postCountMapper.commentCountPlusOne(postCommentBO.getPostId());
             return replyComment.getCommentId();
         }
     }

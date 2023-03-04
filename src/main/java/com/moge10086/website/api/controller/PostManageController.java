@@ -191,7 +191,7 @@ public class PostManageController {
      */
     @Operation(summary = "用户点赞对应帖子", description = "用户点赞对应帖子,返回点赞状态")
     @GetMapping(value = "/praisePost", consumes = {MediaType.ALL_VALUE})
-    public JsonResult<Boolean> getManagePostList(
+    public JsonResult<Boolean> praisePost(
             @Parameter(description = "token", required = true)
             @RequestHeader("Authorization") String token,
             @Parameter(description = "帖子ID", required = true)
@@ -205,5 +205,17 @@ public class PostManageController {
     /**
      * 收藏
      */
-
+    @Operation(summary = "用户收藏对应帖子", description = "用户收藏对应帖子,返回收藏状态")
+    @GetMapping(value = "/favoritePost", consumes = {MediaType.ALL_VALUE})
+    public JsonResult<Boolean> favoritePost(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "帖子ID", required = true)
+            @RequestParam Long postId){
+        Long userId=JwtUtils.getUserIdFromToken(token);
+        if (!postShowService.validateShowPermissionByUserIdAndPostId(userId,postId)){
+            return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
+        }
+        return JsonResult.ok(postManageService.favoritePost(userId,postId));
+    }
 }

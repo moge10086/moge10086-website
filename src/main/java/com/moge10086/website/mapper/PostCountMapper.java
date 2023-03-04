@@ -50,5 +50,30 @@ public interface PostCountMapper extends BaseMapper<PostCount> {
      */
     @Update("update post_count set praise_count = praise_count - 1 where post_id = #{post_id}")
     Boolean praiseCountMinusOne(Long postId);
+    /**
+     * 收藏数+1
+     * todo 缓存处理
+     * @param postId
+     * @return
+     */
+    @Update("update post_count set favorite_count = favorite_count + 1 where post_id = #{post_id}")
+    Boolean favoriteCountPlusOne(Long postId);
+
+    /**
+     * 收藏数-1
+     * todo 缓存处理
+     * @param postId
+     * @return
+     */
+    @Update("update post_count set favorite_count = favorite_count - 1 where post_id = #{post_id}")
+    Boolean favoriteCountMinusOne(Long postId);
+    /**
+     * 评论数+1
+     * todo 缓存处理
+     * @param postId
+     * @return
+     */
+    @Update("update post_count set comment_count = comment_count + 1 where post_id = #{post_id}")
+    Boolean commentCountPlusOne(Long postId);
 
 }

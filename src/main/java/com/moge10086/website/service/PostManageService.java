@@ -78,4 +78,12 @@ public interface PostManageService {
      * @return
      */
     Boolean praisePost(Long userId, Long postId);
+    /**
+     * 收藏帖子
+     *
+     * @param userId
+     * @param postId
+     * @return
+     */
+    Boolean favoritePost(Long userId, Long postId);
 }

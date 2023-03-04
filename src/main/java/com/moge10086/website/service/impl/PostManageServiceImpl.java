@@ -3,10 +3,7 @@ package com.moge10086.website.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.bo.PostArticleBO;
 import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
-import com.moge10086.website.domain.model.PostArticle;
-import com.moge10086.website.domain.model.PostBase;
-import com.moge10086.website.domain.model.PostCount;
-import com.moge10086.website.domain.model.PostPraise;
+import com.moge10086.website.domain.model.*;
 import com.moge10086.website.domain.query.PostQueryDTO;
 import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
@@ -37,6 +34,8 @@ public class PostManageServiceImpl implements PostManageService {
     PostQueryMapper postQueryMapper;
     @Resource
     PostPraiseMapper postPraiseMapper;
+    @Resource
+    PostFavoriteMapper postFavoriteMapper;
     @Override
     public Boolean validateOperatePermissionByUserIdAndPostId(Long userId, Long postId) {
         Long authorId = postBaseMapper.getAuthorIdByPostId(postId);
@@ -117,7 +116,6 @@ public class PostManageServiceImpl implements PostManageService {
     public Boolean praisePost(Long userId, Long postId) {
         //查询点赞记录
         Integer originalPraiseState=postPraiseMapper.getPraiseState(userId,postId);
-        //todo 多线程下会不会同时插入两条 注意唯一索引
         if (originalPraiseState==null){
             //插入点赞记录，第一次都是点赞状态
             postPraiseMapper.insert(PostPraise.initPostPraise(postId,userId));
@@ -132,6 +130,28 @@ public class PostManageServiceImpl implements PostManageService {
                 postCountMapper.praiseCountMinusOne(postId);
             }
             return praiseState;
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean favoritePost(Long userId, Long postId) {
+        Integer originalFavoriteState=postFavoriteMapper.getFavoriteState(userId,postId);
+        if (originalFavoriteState==null){
+            //插入收藏记录，第一次都是收藏状态
+            postFavoriteMapper.insert(PostFavorite.initPostFavorite(postId,userId));
+            postCountMapper.favoriteCountPlusOne(postId);
+        }else{
+            //如果之前是收藏状态（1、true），则更新为取消状态（0、false）
+            boolean favoriteState=originalFavoriteState==0;
+            postFavoriteMapper.updateFavoriteState(userId,postId,favoriteState?1:0,new Date());
+            if (favoriteState){
+                postCountMapper.favoriteCountPlusOne(postId);
+            }else{
+                postCountMapper.favoriteCountMinusOne(postId);
+            }
+            return favoriteState;
         }
         return true;
     }
