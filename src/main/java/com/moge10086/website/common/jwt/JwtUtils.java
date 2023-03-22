@@ -59,6 +59,9 @@ public class JwtUtils {
      * @return Claims
      */
     public static Claims parseJwsToClaims(String jws){
+        if (jws.isEmpty()||jws.isBlank()){
+            throw new JwtException("token为空");
+        }
         return Jwts.parserBuilder().setSigningKey(KEY).build().parseClaimsJws(jws).getBody();
     }
     /**

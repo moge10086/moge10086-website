@@ -13,5 +13,5 @@ public interface UserQueryMapper {
      * @return
      */
     @MapKey("userId")
-    Map<String,BaseUserVO> getBaseUsers(List<Long> userIds);
+    Map<Long, BaseUserVO> getBaseUsers(List<Long> userIds);
 }

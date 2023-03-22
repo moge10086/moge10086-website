@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.jwt.JwtUtils;
 import com.moge10086.website.common.utils.JsonResult;
-import com.moge10086.website.domain.query.qo.QueryPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryFavoritePostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryUserPostCardListBO;
 import com.moge10086.website.domain.vo.post.ArticleShowVO;
 import com.moge10086.website.domain.vo.post.PostCardVO;
 import com.moge10086.website.service.PostManageService;
@@ -47,7 +49,40 @@ public class PostShowController {
         }
         Page<PostCardVO> postCardsPage = postShowService.listPostCards(queryPostCardListBO);
         return JsonResult.ok(postCardsPage);
-
+    }
+    @Operation(summary = "获取个人作品卡片展示列表", description = "获取帖子展示信息列表，用于卡片，列表等简约展示")
+    @PostMapping(value = "/getUserPostCardList",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Page<PostCardVO>> getUserPostCardList(
+            @Parameter(description = "token")
+            @RequestHeader(value = "Authorization",required = false) String token,
+            @RequestBody @Valid QueryUserPostCardListBO queryUserPostCardListBO){
+        /* 验证用户是否有该帖子的浏览权限(作者，用户，游客)
+            返回帖子卡片信息
+            帖子信息：帖子ID、标题、封面、发布时间、类别、简介；浏览量、点赞、收藏、评论；
+            作者信息：作者ID、头像、名称 */
+        if (!queryUserPostCardListBO.isValid()){
+            return JsonResult.errorMsg(StatusCode.ERROR_QUERY_ARGUMENT,"非法的查询参数");
+        }
+        Page<PostCardVO> postCardsPage = postShowService.listUserPostCards(queryUserPostCardListBO);
+        return JsonResult.ok(postCardsPage);
+    }
+    @Operation(summary = "获取个人收藏卡片展示列表", description = "获取帖子展示信息列表，用于卡片，列表等简约展示")
+    @PostMapping(value = "/getFavoritePostCardList",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Page<PostCardVO>> getFavoritePostCardList(
+            @Parameter(description = "token")
+            @RequestHeader(value = "Authorization",required = false) String token,
+            @RequestBody @Valid QueryFavoritePostCardListBO queryFavoritePostCardListBO){
+        /*  1.验证传入参数
+            2.获得被收藏id
+            3.获得收藏id帖子信息
+            （收藏时间？是否需要）
+        * */
+        if (!queryFavoritePostCardListBO.isValid()){
+            //验证传入参数格式是否正确
+            return JsonResult.errorMsg(StatusCode.ERROR_QUERY_ARGUMENT,"非法的查询参数");
+        }
+        Page<PostCardVO> favoritePostCardsPage=postShowService.listFavoritePostCards(queryFavoritePostCardListBO);
+        return JsonResult.ok(favoritePostCardsPage);
     }
 
     @Operation(summary = "获取文章详细信息", description = "获取文章详细信息")

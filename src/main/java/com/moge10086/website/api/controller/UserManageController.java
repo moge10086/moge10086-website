@@ -1,9 +1,11 @@
 package com.moge10086.website.api.controller;
 
+import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.jwt.JwtUtils;
 import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.bo.UserInfoModifyBO;
 import com.moge10086.website.domain.vo.user.BaseUserVO;
+import com.moge10086.website.service.UserFollowService;
 import com.moge10086.website.service.UserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,6 +26,8 @@ import javax.validation.Valid;
 public class UserManageController {
     @Resource
     UserInfoService userInfoService;
+    @Resource
+    UserFollowService userFollowService;
 
     /**
      * 更新用户基本信息,返回用户基本信息
@@ -36,6 +40,7 @@ public class UserManageController {
     public JsonResult<BaseUserVO> updateUserInfo(
             @Parameter(description = "token", required = true)
             @RequestHeader("Authorization") String token,
+            @Parameter(description = "userInfoModifyBO", required = true)
             @RequestBody @Valid UserInfoModifyBO userInfoModifyBO){
         Long userId= JwtUtils.getUserIdFromToken(token);
         userInfoModifyBO.setUserId(userId);
@@ -54,5 +59,23 @@ public class UserManageController {
             @RequestHeader("Authorization") String token){
         Long userId= JwtUtils.getUserIdFromToken(token);
         return JsonResult.ok(userInfoService.getBaseUserVO(userId));
+    }
+    @Operation(summary = "关注/取消关注用户", description = "关注用户，返回是否关注")
+    @GetMapping(value = "/followUser")
+    public JsonResult<Boolean> followUser(
+            @Parameter(description = "token", required = true)
+            @RequestHeader("Authorization") String token,
+            @Parameter(description = "被关注用户id", required = true)
+            @RequestParam Long followedUserId){
+        Long userId= JwtUtils.getUserIdFromToken(token);
+        //自己不能关注自己
+        if(userId.equals(followedUserId)){
+            return JsonResult.errorMsg(StatusCode.NO_FIND_USER,"自己不能关注自己");
+        }
+        //验证被关注用户是否存在
+        if (userInfoService.getBaseUserVO(followedUserId)==null){
+            return JsonResult.errorMsg(StatusCode.NO_FIND_USER,"该用户不存在");
+        }
+        return JsonResult.ok(userFollowService.followUser(userId,followedUserId));
     }
 }

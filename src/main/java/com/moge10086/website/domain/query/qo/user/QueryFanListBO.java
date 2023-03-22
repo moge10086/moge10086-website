@@ -1,4 +1,4 @@
-package com.moge10086.website.domain.query.qo;
+package com.moge10086.website.domain.query.qo.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -9,10 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author 22872
  */
-public class QueryCommentReplyListBO {
-    @Schema(description ="评论ID")
-    @NotNull(message = "评论ID")
-    private Long commentId;
+public class QueryFanListBO {
     @Schema(description ="分页大小:最大20",defaultValue = "20")
     @Min(value = 1,message = "分页大小在1到20间")
     @Max(value = 20,message = "分页大小在1到20间")
@@ -23,13 +20,9 @@ public class QueryCommentReplyListBO {
     @NotNull(message = "currentPage不能为空")
     private Integer currentPage;
 
-    public Long getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(Long commentId) {
-        this.commentId = commentId;
-    }
+    @Schema(description ="被关注用户ID")
+    @NotNull(message = "用户id不能为空")
+    private Long followedUserId;
 
     public Integer getPageSize() {
         return pageSize;
@@ -47,12 +40,20 @@ public class QueryCommentReplyListBO {
         this.currentPage = currentPage;
     }
 
+    public Long getFollowedUserId() {
+        return followedUserId;
+    }
+
+    public void setFollowedUserId(Long followedUserId) {
+        this.followedUserId = followedUserId;
+    }
+
     @Override
     public String toString() {
-        return "QueryCommentReplyListBO{" +
-                "commentId=" + commentId +
-                ", pageSize=" + pageSize +
+        return "QueryFanListBO{" +
+                "pageSize=" + pageSize +
                 ", currentPage=" + currentPage +
+                ", followedUserId=" + followedUserId +
                 '}';
     }
 }

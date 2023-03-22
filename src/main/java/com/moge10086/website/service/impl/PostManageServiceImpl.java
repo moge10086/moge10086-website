@@ -5,7 +5,7 @@ import com.moge10086.website.domain.bo.PostArticleBO;
 import com.moge10086.website.domain.dto.post.PostArticleEditDTO;
 import com.moge10086.website.domain.model.*;
 import com.moge10086.website.domain.query.PostQueryDTO;
-import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.qo.post.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;

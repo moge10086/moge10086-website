@@ -1,4 +1,4 @@
-package com.moge10086.website.domain.query.qo;
+package com.moge10086.website.domain.query.qo.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moge10086.website.enums.PostType;
@@ -11,6 +11,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 查询帖子列表
  * @author 22872
  */
 public class BaseQueryPostListBO {

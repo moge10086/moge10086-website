@@ -1,4 +1,4 @@
-package com.moge10086.website.domain.query.qo;
+package com.moge10086.website.domain.query.qo.post;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.moge10086.website.enums.PostState;
@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 查询(作者、帖子状态)帖子管理列表
  * @author 22872
  */
 public class QueryPostManageListBO extends BaseQueryPostListBO{

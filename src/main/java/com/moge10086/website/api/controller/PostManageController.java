@@ -5,7 +5,7 @@ import com.moge10086.website.common.constant.StatusCode;
 import com.moge10086.website.common.jwt.JwtUtils;
 import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.bo.PostArticleBO;
-import com.moge10086.website.domain.query.qo.QueryPostManageListBO;
+import com.moge10086.website.domain.query.qo.post.QueryPostManageListBO;
 import com.moge10086.website.domain.vo.post.ArticleEditVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.service.PostManageService;

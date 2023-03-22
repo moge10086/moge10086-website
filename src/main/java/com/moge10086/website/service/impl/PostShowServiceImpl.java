@@ -3,8 +3,11 @@ package com.moge10086.website.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.model.PostBase;
 import com.moge10086.website.domain.model.PostCount;
+import com.moge10086.website.domain.query.FavoritePostQueryDTO;
 import com.moge10086.website.domain.query.PostQueryDTO;
-import com.moge10086.website.domain.query.qo.QueryPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryFavoritePostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.QueryUserPostCardListBO;
 import com.moge10086.website.domain.vo.post.ArticleShowVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.domain.vo.post.PostCardVO;
@@ -64,7 +67,28 @@ public class PostShowServiceImpl implements PostShowService {
         postQueryMapper.listBasePosts(basePostPage, PostQueryDTO.generateQuery(queryPostCardListBO));
         //根据帖子ID查询作者信息，BaseUserVO
         List<Long> authorIds = basePostPage.getRecords().stream().map(BasePostVO::getAuthorId).toList();
-        Map<String, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);
+        Map<Long, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);
+        //转换为PostCardVO
+        return (Page<PostCardVO>)basePostPage.convert(n-> new PostCardVO(n,baseUserMap.get(n.getAuthorId())));
+    }
+
+    @Override
+    public Page<PostCardVO> listUserPostCards(QueryUserPostCardListBO queryUserPostCardListBO) {
+        //获得帖子ID及帖子基本信息，BasePostVO
+        Page<BasePostVO> basePostPage=Page.of(queryUserPostCardListBO.getCurrentPage(), queryUserPostCardListBO.getPageSize());
+        postQueryMapper.listBasePosts(basePostPage, PostQueryDTO.generateQuery(queryUserPostCardListBO));
+        // 因为是个人作品，页面已经带有作者信息所以不查询对应作者信息
+        return (Page<PostCardVO>)basePostPage.convert(n-> new PostCardVO(n,null));
+    }
+
+    @Override
+    public Page<PostCardVO> listFavoritePostCards(QueryFavoritePostCardListBO queryFavoritePostCardListBO) {
+        //获得帖子ID及帖子基本信息，BasePostVO
+        Page<BasePostVO> basePostPage=Page.of(queryFavoritePostCardListBO.getCurrentPage(), queryFavoritePostCardListBO.getPageSize());
+        postQueryMapper.listFavoriteBasePosts(basePostPage, FavoritePostQueryDTO.generateQuery(queryFavoritePostCardListBO));
+        //根据帖子ID查询作者信息，BaseUserVO
+        List<Long> authorIds = basePostPage.getRecords().stream().map(BasePostVO::getAuthorId).toList();
+        Map<Long, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);
         //转换为PostCardVO
         return (Page<PostCardVO>)basePostPage.convert(n-> new PostCardVO(n,baseUserMap.get(n.getAuthorId())));
     }

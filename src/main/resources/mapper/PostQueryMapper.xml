@@ -63,4 +63,58 @@
         ON post_base.post_id=post_count.post_id
         <include refid="sortRuleSql"/>
     </select>
+    <select id="listFavoriteBasePosts" resultType="com.moge10086.website.domain.vo.post.BasePostVO">
+        SELECT
+            post_base.post_id AS postId,
+            post_base.author_id AS authorId,
+            post_base.title AS title,
+            post_base.summary AS summary,
+            post_base.cover_img AS coverImg,
+            post_base.update_time AS updateTime,
+            post_base.post_type AS postType,
+            post_base.post_state AS postState,
+            post_count.read_count AS readCount,
+            post_count.praise_count AS praiseCount,
+            post_count.favorite_count AS favoriteCount,
+            post_count.comment_count AS commentCount
+        FROM
+            post_base
+            INNER JOIN post_favorite ON post_base.post_id = post_favorite.post_id
+            INNER JOIN post_count ON post_base.post_id = post_count.post_id
+        WHERE
+            post_favorite.favorite_state = 1
+            AND post_favorite.user_id = #{query.userId}
+        <if test="query.postType!=null">
+            AND post_base.post_type=#{query.postType}
+        </if>
+        <!-- 判断帖子状态 -->
+        <if test="query.postState!=null">
+            AND post_base.post_state=#{query.postState}
+        </if>
+        <!-- 设置排序条件 -->
+        <trim prefix="ORDER BY">
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@TIME.type">
+                post_base.update_time
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@PRAISE.type">
+                post_count.read_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@READ.type">
+                post_count.praise_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@FAVORITE.type">
+                post_count.favorite_count
+            </if>
+            <if test="query.sortType == @com.moge10086.website.enums.SortType@COMMENT.type">
+                post_count.comment_count
+            </if>
+        </trim>
+        <!-- 设置排序顺序 -->
+        <if test="query.sortOrder == true">
+            ASC
+        </if>
+        <if test="query.sortOrder == false">
+            DESC
+        </if>
+    </select>
 </mapper>

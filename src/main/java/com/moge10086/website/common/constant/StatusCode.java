@@ -72,6 +72,10 @@ public class StatusCode {
      */
     static public int NO_FIND_USER_EMAIL=414;
     /**
+     * 该用户不存在
+     */
+    static public int NO_FIND_USER=416;
+    /**
      * 验证码频繁请求
      */
     static public int REQUEST_FREQUENTLY=422;

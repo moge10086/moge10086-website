@@ -1,4 +1,4 @@
-package com.moge10086.website.domain.query.qo;
+package com.moge10086.website.domain.query.qo.comment;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -7,6 +7,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 /**
+ * 查询对应帖子ID的评论列表
  * @author 22872
  */
 public class QueryPostCommentListBO {

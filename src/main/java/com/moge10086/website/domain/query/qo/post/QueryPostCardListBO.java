@@ -1,4 +1,4 @@
-package com.moge10086.website.domain.query.qo;
+package com.moge10086.website.domain.query.qo.post;
 
 /**
  * @author 22872
