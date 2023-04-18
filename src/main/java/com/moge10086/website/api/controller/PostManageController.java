@@ -69,7 +69,7 @@ public class PostManageController {
      * @param postArticleBO
      * @return
      */
-    @Operation(summary = "保存、编辑、发布帖子", description = "保存、编辑、发布帖子。无id则为保存，返回帖子id")
+    @Operation(summary = "保存、编辑、发布文章", description = "保存、编辑、发布文章。无id则为保存，返回帖子id")
     @PostMapping(value = "/saveOrEditAndPublicArticlePost",consumes = {"application/json; charset=UTF-8"})
     public JsonResult<Long> saveOrEditAndPublicArticlePost(
             @Parameter(description = "token", required = true)

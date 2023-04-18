@@ -5,9 +5,11 @@ import com.moge10086.website.domain.model.PostBase;
 import com.moge10086.website.domain.model.PostCount;
 import com.moge10086.website.domain.query.FavoritePostQueryDTO;
 import com.moge10086.website.domain.query.PostQueryDTO;
+import com.moge10086.website.domain.query.SearchPostQueryDTO;
 import com.moge10086.website.domain.query.qo.post.QueryFavoritePostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryPostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryUserPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.SearchPostCardListBO;
 import com.moge10086.website.domain.vo.post.ArticleShowVO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import com.moge10086.website.domain.vo.post.PostCardVO;
@@ -65,6 +67,18 @@ public class PostShowServiceImpl implements PostShowService {
         //获得帖子ID及帖子基本信息，BasePostVO
         Page<BasePostVO> basePostPage=Page.of(queryPostCardListBO.getCurrentPage(), queryPostCardListBO.getPageSize());
         postQueryMapper.listBasePosts(basePostPage, PostQueryDTO.generateQuery(queryPostCardListBO));
+        //根据帖子ID查询作者信息，BaseUserVO
+        List<Long> authorIds = basePostPage.getRecords().stream().map(BasePostVO::getAuthorId).toList();
+        Map<Long, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);
+        //转换为PostCardVO
+        return (Page<PostCardVO>)basePostPage.convert(n-> new PostCardVO(n,baseUserMap.get(n.getAuthorId())));
+    }
+
+    @Override
+    public Page<PostCardVO> searchPostCards(SearchPostCardListBO searchPostCardListBO) {
+        //获得帖子ID及帖子基本信息，BasePostVO
+        Page<BasePostVO> basePostPage=Page.of(searchPostCardListBO.getCurrentPage(), searchPostCardListBO.getPageSize());
+        postQueryMapper.searchBasePosts(basePostPage, SearchPostQueryDTO.generateQuery(searchPostCardListBO));
         //根据帖子ID查询作者信息，BaseUserVO
         List<Long> authorIds = basePostPage.getRecords().stream().map(BasePostVO::getAuthorId).toList();
         Map<Long, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);

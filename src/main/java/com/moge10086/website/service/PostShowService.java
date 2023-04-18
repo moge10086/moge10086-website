@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.moge10086.website.domain.query.qo.post.QueryFavoritePostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryPostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryUserPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.SearchPostCardListBO;
 import com.moge10086.website.domain.vo.post.ArticleShowVO;
 import com.moge10086.website.domain.vo.post.PostCardVO;
 import com.moge10086.website.domain.vo.post.PostShowVO;
@@ -25,6 +26,12 @@ public interface PostShowService {
      * @return
      */
     Page<PostCardVO> listPostCards(QueryPostCardListBO queryPostCardListBO);
+    /**
+     * 通过关键词来检索帖子卡片列表
+     * @param searchPostCardListBO
+     * @return
+     */
+    Page<PostCardVO> searchPostCards(SearchPostCardListBO searchPostCardListBO);
     /**
      * 返回对应用户作品帖子卡片信息列表
      * @param queryUserPostCardListBO

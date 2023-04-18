@@ -3,6 +3,7 @@ package com.moge10086.website.mapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.moge10086.website.domain.query.FavoritePostQueryDTO;
 import com.moge10086.website.domain.query.PostQueryDTO;
+import com.moge10086.website.domain.query.SearchPostQueryDTO;
 import com.moge10086.website.domain.vo.post.BasePostVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -31,6 +32,12 @@ public interface PostQueryMapper {
      * @return
      */
     IPage<BasePostVO> listFavoriteBasePosts(IPage<BasePostVO> page, @Param("query") FavoritePostQueryDTO favoritePostQueryDTO);
-
+    /**
+     * 关键词全文检索帖子列表信息
+     * @param page
+     * @param searchPostQueryDTO
+     * @return
+     */
+    IPage<BasePostVO> searchBasePosts(IPage<BasePostVO> page, @Param("query") SearchPostQueryDTO searchPostQueryDTO);
 
 }

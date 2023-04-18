@@ -7,6 +7,7 @@ import com.moge10086.website.common.utils.JsonResult;
 import com.moge10086.website.domain.query.qo.post.QueryFavoritePostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryPostCardListBO;
 import com.moge10086.website.domain.query.qo.post.QueryUserPostCardListBO;
+import com.moge10086.website.domain.query.qo.post.SearchPostCardListBO;
 import com.moge10086.website.domain.vo.post.ArticleShowVO;
 import com.moge10086.website.domain.vo.post.PostCardVO;
 import com.moge10086.website.service.PostManageService;
@@ -103,5 +104,21 @@ public class PostShowController {
             return JsonResult.errorMsg(StatusCode.ERROR_POST,"非法的postId");
         }
         return JsonResult.ok(postShowService.getArticleShow(userId,postId));
+    }
+    @Operation(summary = "搜索帖子卡片列表", description = "搜索帖子卡片列表")
+    @PostMapping(value = "/searchPost",consumes = {"application/json; charset=UTF-8"})
+    public JsonResult<Page<PostCardVO>> searchPost(
+            @Parameter(description = "token")
+            @RequestHeader(value = "Authorization",required = false) String token,
+            @Parameter(description = "排序条件")
+            @RequestBody @Valid SearchPostCardListBO searchPostCardListBO
+            ){
+        //验证参数合法性
+        if (!searchPostCardListBO.isValid()){
+            //验证传入参数格式是否正确
+            return JsonResult.errorMsg(StatusCode.ERROR_QUERY_ARGUMENT,"非法的查询参数");
+        }
+        Page<PostCardVO> postCardsPage = postShowService.searchPostCards(searchPostCardListBO);
+        return JsonResult.ok(postCardsPage);
     }
 }
