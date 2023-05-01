@@ -40,4 +40,6 @@ public interface PostQueryMapper {
      */
     IPage<BasePostVO> searchBasePosts(IPage<BasePostVO> page, @Param("query") SearchPostQueryDTO searchPostQueryDTO);
 
+    //todo 临时使用
+    IPage<BasePostVO> listHotPosts(IPage<BasePostVO> page);
 }

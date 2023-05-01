@@ -60,4 +60,8 @@ public interface PostShowService {
      * @return
      */
     PostShowVO getPostShow(Long userId,Long postId);
+    /**
+     * todo 临时使用，获得最热帖子
+     */
+    Page<PostCardVO> listHotPostCards(QueryPostCardListBO queryPostCardListBO);
 }

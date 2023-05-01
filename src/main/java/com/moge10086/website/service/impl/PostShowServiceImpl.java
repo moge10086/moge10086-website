@@ -132,4 +132,16 @@ public class PostShowServiceImpl implements PostShowService {
         postCountMapper.readCountPlusOne(postId);
         return new PostShowVO(basePostVO,baseUserVO,praiseState,favoriteState);
     }
+
+    @Override
+    public Page<PostCardVO> listHotPostCards(QueryPostCardListBO queryPostCardListBO) {
+        //获得帖子ID及帖子基本信息，BasePostVO
+        Page<BasePostVO> basePostPage=Page.of(queryPostCardListBO.getCurrentPage(), queryPostCardListBO.getPageSize());
+        postQueryMapper.listHotPosts(basePostPage);
+        //根据帖子ID查询作者信息，BaseUserVO
+        List<Long> authorIds = basePostPage.getRecords().stream().map(BasePostVO::getAuthorId).toList();
+        Map<Long, BaseUserVO> baseUserMap = userQueryMapper.getBaseUsers(authorIds);
+        //转换为PostCardVO
+        return (Page<PostCardVO>)basePostPage.convert(n-> new PostCardVO(n,baseUserMap.get(n.getAuthorId())));
+    }
 }

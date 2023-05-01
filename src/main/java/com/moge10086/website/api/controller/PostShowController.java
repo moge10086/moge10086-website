@@ -121,4 +121,15 @@ public class PostShowController {
         Page<PostCardVO> postCardsPage = postShowService.searchPostCards(searchPostCardListBO);
         return JsonResult.ok(postCardsPage);
     }
+
+    //todo 临时用法，获得最热的帖子
+    @Operation(summary = "获得最热的帖子", description = "获得最热的帖子，用于卡片，列表等简约展示")
+    @PostMapping(value = "/getHotPosts")
+    public JsonResult<Page<PostCardVO>> getHotPosts(){
+        QueryPostCardListBO queryPostCardListBO=new QueryPostCardListBO();
+        queryPostCardListBO.setCurrentPage(1);
+        queryPostCardListBO.setPageSize(10);
+        Page<PostCardVO> postCardsPage = postShowService.listHotPostCards(queryPostCardListBO);
+        return JsonResult.ok(postCardsPage);
+    }
 }

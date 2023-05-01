@@ -3,11 +3,14 @@ package com.moge10086.website.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.moge10086.website.domain.dto.post.PostEditDTO;
 import com.moge10086.website.domain.model.PostBase;
+import com.moge10086.website.domain.model.PostHeat;
 import com.moge10086.website.domain.vo.post.BasePostEditVO;
+import com.moge10086.website.domain.vo.post.BasePostVO;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 22872
@@ -58,4 +61,8 @@ public interface PostBaseMapper extends BaseMapper<PostBase> {
      * @return
      */
     BasePostEditVO getPostEditView(Long postId);
+    //todo 临时使用，获得最近一周的帖子
+    List<BasePostVO> listPostBase();
+    //todo 临时使用，插入/更新热度
+    int insertHeat(List<PostHeat> postHeats);
 }

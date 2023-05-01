@@ -76,4 +76,5 @@ public interface PostCountMapper extends BaseMapper<PostCount> {
     @Update("update post_count set comment_count = comment_count + 1 where post_id = #{post_id}")
     Boolean commentCountPlusOne(Long postId);
 
+
 }

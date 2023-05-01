@@ -5,6 +5,16 @@
         INSERT INTO post_base(author_id,create_time,update_time,title,summary,cover_img,post_type,post_state)
         VALUES(#{authorId},#{createTime},#{updateTime},#{title},#{summary},#{coverImg},#{postType},#{postState});
     </insert>
+    <insert id="insertHeat">
+        INSERT INTO post_heat(post_id, heat, update_time)
+        VALUES
+            <foreach collection="postHeats" item="item" separator=",">
+                (#{item.postId}, #{item.heat}, #{item.updateTime})
+            </foreach>
+        ON DUPLICATE KEY UPDATE
+        heat= values(heat),
+        update_time=values(update_time)
+    </insert>
 
     <update id="updatePostBase" parameterType="com.moge10086.website.domain.dto.post.PostEditDTO">
         UPDATE post_base
@@ -21,5 +31,22 @@
         SELECT post_id,title,summary,cover_img
         from post_base
         where post_id=#{postId}
+    </select>
+    <select id="listPostBase" resultType="com.moge10086.website.domain.vo.post.BasePostVO">
+        SELECT
+            post_base.post_id postId,
+            post_base.author_id authorId,
+            post_base.title title,
+            post_base.summary summary,
+            post_base.cover_img coverImg,
+            post_base.update_time updateTime,
+            post_base.post_type postType,
+            post_base.post_state postState,
+            post_count.read_count readCount,
+            post_count.praise_count praiseCount,
+            post_count.favorite_count favoriteCount,
+            post_count.comment_count commentCount
+        FROM post_base INNER JOIN post_count
+        ON post_base.post_id=post_count.post_id
     </select>
 </mapper>
